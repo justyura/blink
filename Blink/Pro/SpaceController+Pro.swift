@@ -28,7 +28,7 @@ extension SpaceController {
 
   func proGlobalKeyCommands() -> [UIKeyCommand] {
     if let cached = Self._proGlobalCommandsCache { return cached }
-    let wanted: [Command] = [.openCanvas, .hostJumper, .sessionSwitcher, .webSearch]
+    let wanted: [Command] = [.openCanvas, .hostJumper, .sessionSwitcher, .webSearch, .toggleBrowser]
     let cmds: [UIKeyCommand] = KBTracker.shared.loadConfig().shortcuts.compactMap { shortcut -> UIKeyCommand? in
       guard case .command(let c) = shortcut.action, wanted.contains(c), !shortcut.input.isEmpty else { return nil }
       let cmd = UIKeyCommand(
@@ -260,39 +260,35 @@ extension SpaceController {
     sp._presentProPalette(model: model)
   }
 
-  /// Presents the built-in browser full screen over the terminal.
+  /// Loads a URL in the persistent built-in browser and shows it.
   func proOpenBrowser(url: URL) {
     let sp = _interactiveSpaceController()
-    sp.currentTerm()?.resignInput()
+    let browser = ProBrowser.shared.controller()
+    browser.load(url)
+    sp._presentProBrowser()
+  }
 
-    let settings = ProSettings.shared
-    let config = WKWebViewConfiguration()
-    config.allowsInlineMediaPlayback = true
-    let browser = BrowserController()
-    if settings.browserVimKeys {
-      config.userContentController.addUserScript(
-        WKUserScript(source: BrowserVimScript.source, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
-      config.userContentController.add(ProScriptMessageProxy(browser), name: BrowserVimScript.messageHandler)
+  /// Option+C: show the browser (last page kept) or hide it.
+  @objc func toggleBrowserAction() {
+    let sp = _interactiveSpaceController()
+    if sp.presentedViewController === ProBrowser.shared.navigation {
+      sp.dismiss(animated: true) { sp.focusOnShellAction() }
+      return
     }
-    if settings.browserTheme == .forceDark {
-      config.userContentController.addUserScript(
-        WKUserScript(source: BrowserVimScript.forceDarkCSS, injectionTime: .atDocumentStart, forMainFrameOnly: false))
+    let browser = ProBrowser.shared.controller()
+    if browser.webView?.url == nil {
+      // First use: open the search engine's home page.
+      if let home = BrowserController.url(forInput: ProSettings.shared.searchTemplate.components(separatedBy: "/").prefix(3).joined(separator: "/")) {
+        browser.load(home)
+      }
     }
+    sp._presentProBrowser()
+  }
 
-    let webView = WKWebView(frame: .zero, configuration: config)
-    webView.allowsBackForwardNavigationGestures = true
-    if settings.browserTheme != .system {
-      webView.overrideUserInterfaceStyle = .dark
-    }
-
-    browser.webView = webView
-    let nav = UINavigationController(rootViewController: browser)
-    nav.modalPresentationStyle = .fullScreen
-    if settings.browserTheme != .system {
-      nav.overrideUserInterfaceStyle = .dark
-    }
-    webView.load(URLRequest(url: url))
-    sp.present(nav, animated: true)
+  func _presentProBrowser() {
+    guard presentedViewController == nil else { return }
+    currentTerm()?.resignInput()
+    present(ProBrowser.shared.navigation, animated: true)
   }
 
   // MARK: - App hopping (Option+B)
@@ -340,5 +336,56 @@ final class ProScriptMessageProxy: NSObject, WKScriptMessageHandler {
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     guard let body = message.body as? [String: Any], let action = body["action"] as? String else { return }
     _target?.handleScriptMessage(action: action, payload: body["payload"])
+  }
+}
+
+/// The one built-in browser instance. Hidden with Option+C or Close, it keeps its page
+/// and history, so toggling it back is instant. Rebuilt when browser settings change.
+final class ProBrowser {
+  static let shared = ProBrowser()
+
+  private(set) var navigation = UINavigationController()
+  private var _controller: BrowserController? = nil
+  private var _signature = ""
+
+  private init() {}
+
+  private var _currentSignature: String {
+    let s = ProSettings.shared
+    return "\(s.browserVimKeys)|\(s.browserTheme.rawValue)"
+  }
+
+  func controller() -> BrowserController {
+    if let c = _controller, _signature == _currentSignature { return c }
+
+    let settings = ProSettings.shared
+    let config = WKWebViewConfiguration()
+    config.allowsInlineMediaPlayback = true
+    let browser = BrowserController()
+    if settings.browserVimKeys {
+      config.userContentController.addUserScript(
+        WKUserScript(source: BrowserVimScript.source, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
+      config.userContentController.add(ProScriptMessageProxy(browser), name: BrowserVimScript.messageHandler)
+    }
+    if settings.browserTheme == .forceDark {
+      config.userContentController.addUserScript(
+        WKUserScript(source: BrowserVimScript.forceDarkCSS, injectionTime: .atDocumentStart, forMainFrameOnly: false))
+    }
+
+    let webView = WKWebView(frame: .zero, configuration: config)
+    webView.allowsBackForwardNavigationGestures = true
+    if settings.browserTheme != .system {
+      webView.overrideUserInterfaceStyle = .dark
+    }
+    browser.webView = webView
+
+    let nav = UINavigationController(rootViewController: browser)
+    nav.modalPresentationStyle = .fullScreen
+    nav.overrideUserInterfaceStyle = settings.browserTheme == .system ? .unspecified : .dark
+
+    navigation = nav
+    _controller = browser
+    _signature = _currentSignature
+    return browser
   }
 }

@@ -224,6 +224,7 @@ class KeyShortcut: ObservableObject, Codable, Identifiable {
       KeyShortcut(.webSearch, .alternate, "o"),
       KeyShortcut(.openCanvas, .alternate, "b"),
       KeyShortcut(.hostJumper, .alternate, "f"),
+      KeyShortcut(.toggleBrowser, .alternate, "c"),
       KeyShortcut(.tab1, .alternate, "1"),
       KeyShortcut(.tab2, .alternate, "2"),
       KeyShortcut(.tab3, .alternate, "3"),

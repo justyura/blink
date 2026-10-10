@@ -159,6 +159,7 @@ import WebKit
       UIKeyCommand(title: "Address", action: #selector(_focusAddress), input: "l", modifierFlags: .command),
       UIKeyCommand(title: "Address", action: #selector(_focusAddress), input: "o", modifierFlags: .alternate),
       UIKeyCommand(title: "Close", action: #selector(_close), input: "w", modifierFlags: .command),
+      UIKeyCommand(title: "Hide", action: #selector(_close), input: "c", modifierFlags: .alternate),
       UIKeyCommand(title: "Reload", action: #selector(_reload), input: "r", modifierFlags: .command),
       UIKeyCommand(title: "Back", action: #selector(_goBack), input: "[", modifierFlags: .command),
       UIKeyCommand(title: "Forward", action: #selector(_goForward), input: "]", modifierFlags: .command),

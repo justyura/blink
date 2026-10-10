@@ -328,6 +328,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     let spCtrl = _spCtrl
 
+    // Blink Pro: always hand keyboard focus back to the terminal when returning from
+    // another app, so typing works immediately. Retry once in case the first attempt
+    // raced with the scene transition.
+    for delay in [0.15, 0.6] {
+      DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+        guard
+          let self = self,
+          scene.activationState == .foregroundActive,
+          self.paywallWindow == nil,
+          self._lockCtrl == nil,
+          spCtrl.presentedViewController == nil,
+          spCtrl._proPaletteVC == nil,
+          !spCtrl.isSnipsInputModeActive
+        else { return }
+        if KBTracker.shared.input?.isRealFirstResponder != true {
+          window.makeKey()
+          spCtrl.focusOnShellAction()
+          KBTracker.shared.input?.reportFocus(true)
+        }
+      }
+    }
+
     if window.rootViewController != spCtrl {
       window.rootViewController = spCtrl
     }

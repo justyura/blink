@@ -769,6 +769,7 @@ extension SpaceController {
     case .webSearch: showWebSearchAction()
     case .openCanvas: openCanvasSimpleAction()
     case .hostJumper: showHostJumperAction()
+    case .toggleBrowser: toggleBrowserAction()
 
     }
   }
