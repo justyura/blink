@@ -236,6 +236,37 @@ extension SpaceController {
     }
   }
 
+  // MARK: - Pro menu (smart keys ⚡ button, for touch use)
+
+  @objc func showProMenuAction() {
+    let sp = _interactiveSpaceController()
+    if sp._proPaletteVC != nil {
+      sp._dismissProPalette()
+      return
+    }
+    let voiceOn = VoiceInputManager.shared.state != .idle
+    let entries: [(Command, String, String, String)] = [
+      (.voiceToggle, "⏺", voiceOn ? "Stop voice input" : "Voice input", voiceOn ? "recording…" : "speak, tap again to send"),
+      (.sessionSwitcher, "J", "Sessions", "jump between open sessions"),
+      (.hostJumper, "F", "Hosts", "connect or jump to a host"),
+      (.webSearch, "O", "Web search", "search or open a URL"),
+      (.toggleBrowser, "C", "Browser", "show the built-in browser"),
+      (.openCanvas, "B", "Canvas Simple", "switch to the canvas app"),
+      (.configShow, ",", "Settings", "voice, Blink Pro, keyboard…"),
+    ]
+    let items = entries.map { PaletteItem(id: $0.0.rawValue, badge: $0.1, title: $0.2, subtitle: $0.3) }
+    let model = PaletteModel(title: "Blink Pro", placeholder: "", items: items)
+    model.showsSearchField = false
+    model.onSubmit = { [weak sp] _, item in
+      guard let sp = sp else { return }
+      sp._dismissProPalette()
+      guard let item = item, let cmd = Command(rawValue: item.id) else { return }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { sp._onCommand(cmd) }
+    }
+    model.onCancel = { [weak sp] in sp?._dismissProPalette() }
+    sp._presentProPalette(model: model)
+  }
+
   // MARK: - Web search (Option+O)
 
   @objc func showWebSearchAction() {

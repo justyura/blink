@@ -81,6 +81,8 @@ enum KBKeyValue: Hashable, Identifiable, Codable {
   case copy
   case paste
   case hideKB
+  case mic
+  case pro
   case text(value: String)
   case f(Int8)
   
@@ -98,6 +100,8 @@ enum KBKeyValue: Hashable, Identifiable, Codable {
     case .copy:   return "copy"
     case .paste:  return "paste"
     case .hideKB: return "hideKB"
+    case .mic:    return "mic"
+    case .pro:    return "pro"
     case .text(let value): return value
     case .f(let value): return "F\(value)"
     }
@@ -161,6 +165,8 @@ enum KBKeyValue: Hashable, Identifiable, Codable {
     case .tab: return "Tab"
     case .up: return "Up"
     case .hideKB: return "Hide Keyboard"
+    case .mic: return "Voice Input"
+    case .pro: return "Blink Pro Menu"
     case .text(let value): return value
     case .f(let value): return "F\(value)"
     }
@@ -183,6 +189,8 @@ enum KBKeyValue: Hashable, Identifiable, Codable {
     case .down: return UIKeyCommand.inputDownArrow
     case .tab: return "\t"
     case .hideKB: return "hideKeyboard"
+    case .mic: return "voiceToggle"
+    case .pro: return "proMenu"
     default: return nil
     }
   }
@@ -204,6 +212,8 @@ enum KBKeyValue: Hashable, Identifiable, Codable {
     case .copy:   return "doc.on.doc"
     case .paste:  return "doc.on.clipboard"
     case .hideKB: return "keyboard.chevron.compact.down"
+    case .mic:    return "mic.fill"
+    case .pro:    return "bolt.fill"
     default:      return nil
     }
   }
@@ -219,7 +229,7 @@ enum KBKeyValue: Hashable, Identifiable, Codable {
   }
   
   static var specials: [Self] {
-    [.cmd, .alt, .ctrl, .esc, .tab, .left, .right, .up, .down, .copy, .paste, .hideKB]
+    [.cmd, .alt, .ctrl, .esc, .tab, .left, .right, .up, .down, .copy, .paste, .hideKB, .mic, .pro]
   }
   
   var isModifier: Bool {
@@ -231,7 +241,7 @@ enum KBKeyValue: Hashable, Identifiable, Codable {
 
   var isCommand: Bool {
     switch self {
-    case .hideKB: return true
+    case .hideKB, .mic, .pro: return true
     default: return false
     }
   }

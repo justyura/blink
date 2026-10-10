@@ -770,6 +770,8 @@ extension SpaceController {
     case .openCanvas: openCanvasSimpleAction()
     case .hostJumper: showHostJumperAction()
     case .toggleBrowser: toggleBrowserAction()
+    case .voiceToggle: VoiceInputManager.shared.toggle()
+    case .proMenu: showProMenuAction()
 
     }
   }

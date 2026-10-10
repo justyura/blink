@@ -24,6 +24,9 @@ final class PaletteModel: ObservableObject {
   let footer: String
   let items: [PaletteItem]
 
+  /// Hide the text field for plain menus (touch use).
+  var showsSearchField = true
+
   @Published var query: String = ""
   @Published var selectedIndex: Int = 0
 
@@ -75,6 +78,17 @@ struct PaletteView: View {
         .onTapGesture { model.onCancel() }
 
       VStack(spacing: 0) {
+        if !model.showsSearchField {
+          HStack {
+            Text(model.title).font(.headline)
+            Spacer()
+            Button(action: { model.onCancel() }) {
+              Image(systemName: "xmark.circle.fill").foregroundColor(.secondary).font(.title3)
+            }
+          }
+          .padding(.horizontal, 16)
+          .padding(.vertical, 12)
+        } else {
         HStack(spacing: 10) {
           Image(systemName: model.items.isEmpty ? "magnifyingglass" : "rectangle.stack")
             .foregroundColor(.secondary)
@@ -94,6 +108,7 @@ struct PaletteView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
+        }
 
         let list = model.filteredItems
         if !list.isEmpty {
@@ -145,7 +160,9 @@ struct PaletteView: View {
       .padding(.top, 72)
     }
     .onAppear {
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { focused = true }
+      if model.showsSearchField {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { focused = true }
+      }
     }
   }
 }

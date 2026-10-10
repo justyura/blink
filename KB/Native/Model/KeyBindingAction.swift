@@ -75,6 +75,8 @@ enum Command: String, Codable, CaseIterable {
   case openCanvas
   case hostJumper
   case toggleBrowser
+  case voiceToggle
+  case proMenu
 
   var title: String {
     switch self {
@@ -122,6 +124,8 @@ enum Command: String, Codable, CaseIterable {
     case .openCanvas:             return "Open Canvas Simple"
     case .hostJumper:             return "Host Jumper"
     case .toggleBrowser:          return "Toggle Browser"
+    case .voiceToggle:            return "Voice Input"
+    case .proMenu:                return "Blink Pro Menu"
     }
   }
 }

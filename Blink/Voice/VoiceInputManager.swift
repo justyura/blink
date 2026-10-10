@@ -157,7 +157,7 @@ final class VoiceInputManager: NSObject {
     _haptic(.medium)
     _showHUD(.listening, _settings.mode == .pushToTalk && isPushToTalkRecording
              ? "Listening… release Shift to send"
-             : "Listening… tap right Shift to stop")
+             : "Listening… tap mic or right Shift to stop")
     _startMetering()
   }
 

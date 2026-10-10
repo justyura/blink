@@ -90,6 +90,8 @@ extension KBLayout {
       .flexKey(.esc,  traits: .default - .cmdOn - .skb + .hkb + .suggestionsOn),
     ],
     [
+      .icon(.mic, traits: .default),
+      .icon(.pro, traits: .default),
       .arrows(traits: .default - .cmdOn),
       .icon(.hideKB, traits: .default - .cmdOff),
       .wideKey(.cmd, traits: .default + .hkb),
@@ -174,6 +176,8 @@ extension KBLayout {
    ], [
      .icon(   .copy,  traits: .all - .selectionOff - .skb),
      .icon(   .paste, traits: .all - .clipboardOff - .skb),
+     .icon(.mic, traits: .default),
+     .icon(.pro, traits: .default),
      .arrows(traits: .default - .cmdOn),
      .wideKey(    .cmd,   traits: .default + .hkb),
      .icon(   .cmd,   traits: .defaultSuggestionsOnly + .hkb),
@@ -259,6 +263,8 @@ extension KBLayout {
     ], [
       .icon(.copy,  traits: .all - .selectionOff - .skb),
       .icon(.paste, traits: .all - .clipboardOff - .skb),
+      .icon(.mic, traits: .default),
+      .icon(.pro, traits: .default),
       .arrows(traits: .default - .cmdOn),
       .wideKey(    .cmd,   traits: .default + .hkb),
       .icon(.cmd,    traits: .defaultSuggestionsOnly + .hkb),
@@ -344,6 +350,8 @@ extension KBLayout {
 //      .key(    .down,  traits: .default),
 //      .key(    .up,    traits: .default),
 //      .key(    .right, traits: .default),
+      .icon(.mic, traits: .default),
+      .icon(.pro, traits: .default),
       .arrows(traits: .default - .cmdOn),
 
       .wideKey(.cmd,   traits: .default),
@@ -423,6 +431,8 @@ extension KBLayout {
     ], [
       .icon(.copy,  traits: .all - .selectionOff - .skb),
       .icon(.paste, traits: .all - .clipboardOff - .skb),
+      .icon(.mic, traits: .default),
+      .icon(.pro, traits: .default),
       .key(.left,   traits: .default),
       .key(.down,   traits: .default),
       .key(.up,     traits: .default),

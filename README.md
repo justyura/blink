@@ -106,6 +106,10 @@ after each transcription. The implementation lives in `Blink/Voice/`.
 | ⌥C | Toggle the built-in browser. Hiding it keeps the page and history, so it comes back instantly. Works even while a page is hung or the address bar is focused. ⌥⇧C discards the browser (kills a stuck page), ⌘. stops loading. |
 | ⌥B | Jump to the Canvas Simple app (`canvassimple://`). Canvas Simple jumps back with ⌥B via `blinkpro://`. |
 
+On iPhone, or whenever the software keyboard is up, the smart keys bar has a 🎤 key (tap to record,
+tap again to transcribe) and a ⚡ key that opens a menu with all of the above, so everything works
+by touch too.
+
 All of these are regular Blink shortcuts, so they can be changed in Settings › Keyboard › Shortcuts.
 Settings › Blink Pro holds the search engine (Google, DuckDuckGo, Bing, Kagi, Baidu or a custom
 `%s` template), the browser night mode (System / Dark / Force Dark), the Vim keys toggle and
