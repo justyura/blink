@@ -221,18 +221,18 @@ final class PaletteViewController: UIHostingController<PaletteView> {
 
   override var keyCommands: [UIKeyCommand]? {
     let cmds = [
-      UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(_cancel)),
-      UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(_up)),
-      UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(_down)),
-      UIKeyCommand(input: "p", modifierFlags: .control, action: #selector(_up)),
-      UIKeyCommand(input: "n", modifierFlags: .control, action: #selector(_down)),
-      UIKeyCommand(input: "[", modifierFlags: .control, action: #selector(_cancel)),
+      UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(paletteCancel)),
+      UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(paletteUp)),
+      UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(paletteDown)),
+      UIKeyCommand(input: "p", modifierFlags: .control, action: #selector(paletteUp)),
+      UIKeyCommand(input: "n", modifierFlags: .control, action: #selector(paletteDown)),
+      UIKeyCommand(input: "[", modifierFlags: .control, action: #selector(paletteCancel)),
     ]
     cmds.forEach { $0.wantsPriorityOverSystemBehavior = true }
     return cmds
   }
 
-  @objc private func _cancel() { model.onCancel() }
-  @objc private func _up() { model.move(-1) }
-  @objc private func _down() { model.move(1) }
+  @objc private func paletteCancel() { model.onCancel() }
+  @objc private func paletteUp() { model.move(-1) }
+  @objc private func paletteDown() { model.move(1) }
 }

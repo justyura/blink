@@ -193,7 +193,7 @@ import WebKit
 
   func handleScriptMessage(action: String, payload: Any?) {
     switch action {
-    case "address": _focusAddress()
+    case "address": focusAddressBar()
     case "close": _close()
     case "reset": ProBrowser.shared.reset(dismissingFrom: presentingViewController)
     case "stop": webView?.stopLoading()
@@ -214,8 +214,8 @@ import WebKit
 
   public override var keyCommands: [UIKeyCommand]? {
     let cmds = [
-      UIKeyCommand(title: "Address", action: #selector(_focusAddress), input: "l", modifierFlags: .command),
-      UIKeyCommand(title: "Address", action: #selector(_focusAddress), input: "o", modifierFlags: .alternate),
+      UIKeyCommand(title: "Address", action: #selector(focusAddressBar), input: "l", modifierFlags: .command),
+      UIKeyCommand(title: "Address", action: #selector(focusAddressBar), input: "o", modifierFlags: .alternate),
       UIKeyCommand(title: "Close", action: #selector(_close), input: "w", modifierFlags: .command),
       UIKeyCommand(title: "Hide", action: #selector(_close), input: "c", modifierFlags: .alternate),
       UIKeyCommand(title: "Reload", action: #selector(_reload), input: "r", modifierFlags: .command),
@@ -224,7 +224,7 @@ import WebKit
     ]
     cmds.forEach { $0.wantsPriorityOverSystemBehavior = true }
     if _addressField.isFirstResponder {
-      let esc = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(_escape))
+      let esc = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(escapeKeyPressed))
       esc.wantsPriorityOverSystemBehavior = true
       return cmds + [esc]
     }
@@ -239,12 +239,12 @@ import WebKit
     webView?.loadHTMLString(BrowserVimScript.startPageHTML, baseURL: nil)
   }
 
-  @objc func _focusAddress() {
+  @objc func focusAddressBar() {
     _addressField.becomeFirstResponder()
     _addressField.selectAll(nil)
   }
 
-  @objc func _escape() {
+  @objc func escapeKeyPressed() {
     if _addressField.isFirstResponder {
       _addressField.text = webView?.url?.absoluteString
       _addressField.resignFirstResponder()
@@ -307,10 +307,10 @@ final class ProAddressField: UITextField {
   var onEscape: () -> Void = {}
 
   override var keyCommands: [UIKeyCommand]? {
-    let esc = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(_escape))
+    let esc = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(escapeKeyPressed))
     esc.wantsPriorityOverSystemBehavior = true
     return [esc]
   }
 
-  @objc private func _escape() { onEscape() }
+  @objc private func escapeKeyPressed() { onEscape() }
 }

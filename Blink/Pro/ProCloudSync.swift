@@ -43,9 +43,9 @@ final class ProCloudSync {
 
   func start() {
     _snapshot = _localSettings()
-    NotificationCenter.default.addObserver(self, selector: #selector(_kvsChanged(_:)),
+    NotificationCenter.default.addObserver(self, selector: #selector(kvsDidChange(_:)),
                                            name: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: _kvs)
-    NotificationCenter.default.addObserver(self, selector: #selector(_defaultsChanged),
+    NotificationCenter.default.addObserver(self, selector: #selector(defaultsDidChange),
                                            name: UserDefaults.didChangeNotification, object: nil)
     _kvs.synchronize()
     _applyRemoteSettings(keys: Array(_kvs.dictionaryRepresentation.keys))
@@ -73,7 +73,7 @@ final class ProCloudSync {
     }
   }
 
-  @objc private func _defaultsChanged() {
+  @objc private func defaultsDidChange() {
     guard !_applyingRemote, isAvailable else { return }
     _pushSettings()
   }
@@ -93,7 +93,7 @@ final class ProCloudSync {
     if changed { _kvs.synchronize() }
   }
 
-  @objc private func _kvsChanged(_ note: Notification) {
+  @objc private func kvsDidChange(_ note: Notification) {
     let keys = (note.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String]) ?? []
     _applyRemoteSettings(keys: keys)
   }

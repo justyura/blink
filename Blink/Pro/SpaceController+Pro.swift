@@ -33,7 +33,7 @@ extension SpaceController {
       guard case .command(let c) = shortcut.action, wanted.contains(c), !shortcut.input.isEmpty else { return nil }
       let cmd = UIKeyCommand(
         title: c.title,
-        action: #selector(_onProGlobalCommand(_:)),
+        action: #selector(onProGlobalCommand(_:)),
         input: shortcut.input,
         modifierFlags: shortcut.modifiers,
         propertyList: ["ProCommand": c.rawValue]
@@ -45,7 +45,7 @@ extension SpaceController {
     return cmds
   }
 
-  @objc func _onProGlobalCommand(_ sender: UIKeyCommand) {
+  @objc func onProGlobalCommand(_ sender: UIKeyCommand) {
     guard
       let dict = sender.propertyList as? [String: String],
       let raw = dict["ProCommand"],
@@ -324,7 +324,7 @@ extension SpaceController {
     guard presentedViewController == nil else { return }
     currentTerm()?.resignInput()
     present(ProBrowser.shared.navigation, animated: true) {
-      if focusAddress { ProBrowser.shared.controller()._focusAddress() }
+      if focusAddress { ProBrowser.shared.controller().focusAddressBar() }
     }
   }
 
@@ -453,45 +453,45 @@ final class ProBrowserNavigationController: UINavigationController {
 
   override var keyCommands: [UIKeyCommand]? {
     let cmds = [
-      UIKeyCommand(title: "Hide Browser", action: #selector(_hide), input: "w", modifierFlags: .command),
-      UIKeyCommand(title: "Hide Browser", action: #selector(_hide), input: "c", modifierFlags: .alternate),
-      UIKeyCommand(title: "Reset Browser", action: #selector(_reset), input: "c", modifierFlags: [.alternate, .shift]),
-      UIKeyCommand(title: "Stop Loading", action: #selector(_stop), input: ".", modifierFlags: .command),
+      UIKeyCommand(title: "Hide Browser", action: #selector(hideBrowser), input: "w", modifierFlags: .command),
+      UIKeyCommand(title: "Hide Browser", action: #selector(hideBrowser), input: "c", modifierFlags: .alternate),
+      UIKeyCommand(title: "Reset Browser", action: #selector(resetBrowser), input: "c", modifierFlags: [.alternate, .shift]),
+      UIKeyCommand(title: "Stop Loading", action: #selector(stopBrowserLoading), input: ".", modifierFlags: .command),
     ]
     let wanted: [Command] = [.hostJumper, .sessionSwitcher, .openCanvas,
                              .tab1, .tab2, .tab3, .tab4, .tab5, .tab6, .tab7, .tab8, .tab9]
     let blink: [UIKeyCommand] = KBTracker.shared.loadConfig().shortcuts.compactMap { shortcut -> UIKeyCommand? in
       guard case .command(let c) = shortcut.action, wanted.contains(c), !shortcut.input.isEmpty else { return nil }
-      return UIKeyCommand(title: c.title, action: #selector(_runBlinkCommand(_:)), input: shortcut.input,
+      return UIKeyCommand(title: c.title, action: #selector(runBlinkCommand(_:)), input: shortcut.input,
                           modifierFlags: shortcut.modifiers, propertyList: ["ProCommand": c.rawValue])
     }
     (cmds + blink).forEach { $0.wantsPriorityOverSystemBehavior = true }
     return cmds + blink
   }
 
-  @objc private func _runBlinkCommand(_ sender: UIKeyCommand) {
+  @objc private func runBlinkCommand(_ sender: UIKeyCommand) {
     guard
       let dict = sender.propertyList as? [String: String],
       let raw = dict["ProCommand"],
       let cmd = Command(rawValue: raw),
       let sp = presentingViewController as? SpaceController
     else { return }
-    _hide()
+    hideBrowser()
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { sp._onCommand(cmd) }
   }
 
-  @objc private func _hide() {
+  @objc private func hideBrowser() {
     let presenter = presentingViewController
     presenter?.dismiss(animated: true) {
       (presenter as? SpaceController)?.focusOnShellAction()
     }
   }
 
-  @objc private func _reset() {
+  @objc private func resetBrowser() {
     ProBrowser.shared.reset(dismissingFrom: presentingViewController)
   }
 
-  @objc private func _stop() {
+  @objc private func stopBrowserLoading() {
     (viewControllers.first as? BrowserController)?.webView?.stopLoading()
   }
 }
