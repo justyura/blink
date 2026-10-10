@@ -196,6 +196,11 @@ class TermController: UIViewController {
   private var _sessionPayload: TermSessionPayload? = nil
   private var _session: Session? { _sessionPayload?.session }
 
+  /// Blink Pro: true while a command (ssh, mosh, ...) is running in this session.
+  var proIsRunningCommand: Bool {
+    (_session as? MCPSession)?.isRunningCmd() ?? false
+  }
+
   required init(meta: SessionMeta? = nil) {
     _meta = meta ?? SessionMeta()
     super.init(nibName: nil, bundle: nil)

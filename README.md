@@ -99,13 +99,16 @@ after each transcription. The implementation lives in `Blink/Voice/`.
 
 | Keys | What happens |
 |---|---|
+| ⌥F | Host jumper: lists the hosts from `~/.ssh/config` and Blink's Hosts. ⏎ jumps to that host's open session or connects with mosh (or ssh, see Settings › Blink Pro). `local` returns to a plain Blink shell. |
 | ⌥J | Session jumper: a palette listing every open session by its terminal title. Type to filter, ↑↓ and ⏎ to switch, or type the session number. |
 | ⌥1 … ⌥9 | Jump straight to session 1…9. |
-| ⌥O | Web search bar: type a query or URL, ⏎ opens it in the built-in browser (⌘L / ⌥O address bar, ⌘[ ⌘] back/forward, ⌘W or esc closes). |
+| ⌥O | Web search bar: type a query or URL, ⏎ opens it in the built-in browser (⌘L / ⌥O address bar, ⌘[ ⌘] back/forward, ⌘W closes). Inside pages: `j`/`k` scroll, `d`/`u` half page, `gg`/`G`, `f` link hints (type the label to click), `H`/`L` history, `r` reload, `o` address bar, `y` copy URL, `x` close. |
 | ⌥B | Jump to the Canvas Simple app (`canvassimple://`). Canvas Simple jumps back with ⌥B via `blinkpro://`. |
 
 All of these are regular Blink shortcuts, so they can be changed in Settings › Keyboard › Shortcuts.
-The search engine defaults to Google; set the `blinkpro.searchURL` user default to change it.
+Settings › Blink Pro holds the search engine (Google, DuckDuckGo, Bing, Kagi, Baidu or a custom
+`%s` template), the browser night mode (System / Dark / Force Dark), the Vim keys toggle and
+whether the host jumper connects with mosh or ssh.
 
 ### Sync your Mac's SSH config to the device
 

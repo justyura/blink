@@ -36,11 +36,8 @@ import WebKit
 
 @objc public class BrowserController: UIViewController, UITextFieldDelegate {
 
-  /// Search engine used for non-URL input. Override with the
-  /// `blinkpro.searchURL` user default, e.g. "https://duckduckgo.com/?q=%@".
-  static var searchTemplate: String {
-    UserDefaults.standard.string(forKey: "blinkpro.searchURL") ?? "https://www.google.com/search?q=%@"
-  }
+  /// Search engine template from Settings › Blink Pro (`%s` is the query).
+  static var searchTemplate: String { ProSettings.shared.searchTemplate }
 
   /// Turns typed text into a URL: full URLs and host-like strings load directly,
   /// everything else becomes a search.
@@ -55,7 +52,7 @@ import WebKit
     var allowed = CharacterSet.urlQueryAllowed
     allowed.remove(charactersIn: "&+=?#")
     let q = text.addingPercentEncoding(withAllowedCharacters: allowed) ?? text
-    return URL(string: String(format: searchTemplate, q))
+    return URL(string: searchTemplate.replacingOccurrences(of: "%s", with: q))
   }
 
   private var _urlObservation: NSKeyValueObservation?
@@ -133,6 +130,27 @@ import WebKit
     super.viewDidLayoutSubviews()
     webView?.frame = self.view.bounds
   }
+
+  public override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    webView?.becomeFirstResponder()
+  }
+
+  public func textFieldDidEndEditing(_ textField: UITextField) {
+    webView?.becomeFirstResponder()
+  }
+
+  // MARK: - Messages from the injected Vim script
+
+  func handleScriptMessage(action: String, payload: Any?) {
+    switch action {
+    case "address": _focusAddress()
+    case "close": _close()
+    case "copyURL":
+      if let s = payload as? String { UIPasteboard.general.string = s }
+    default: break
+    }
+  }
   
   public override var canBecomeFirstResponder: Bool { true }
 
@@ -144,9 +162,13 @@ import WebKit
       UIKeyCommand(title: "Reload", action: #selector(_reload), input: "r", modifierFlags: .command),
       UIKeyCommand(title: "Back", action: #selector(_goBack), input: "[", modifierFlags: .command),
       UIKeyCommand(title: "Forward", action: #selector(_goForward), input: "]", modifierFlags: .command),
-      UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(_escape)),
     ]
     cmds.forEach { $0.wantsPriorityOverSystemBehavior = true }
+    if _addressField.isFirstResponder {
+      let esc = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(_escape))
+      esc.wantsPriorityOverSystemBehavior = true
+      return cmds + [esc]
+    }
     return cmds
   }
 

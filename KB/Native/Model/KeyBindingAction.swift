@@ -73,6 +73,7 @@ enum Command: String, Codable, CaseIterable {
   case sessionSwitcher
   case webSearch
   case openCanvas
+  case hostJumper
 
   var title: String {
     switch self {
@@ -118,6 +119,7 @@ enum Command: String, Codable, CaseIterable {
     case .sessionSwitcher:        return "Session Jumper"
     case .webSearch:              return "Web Search"
     case .openCanvas:             return "Open Canvas Simple"
+    case .hostJumper:             return "Host Jumper"
     }
   }
 }

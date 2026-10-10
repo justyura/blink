@@ -680,7 +680,9 @@ extension SpaceController {
       return [UIKeyCommand(input: "", modifierFlags: keyCode.modifierFlags, action: #selector(onStuckOpCommand))]
     }
     
-    return input.blinkKeyCommands
+    // Blink Pro: app-level shortcuts stay reachable even when the terminal is not
+    // first responder (for example right after returning from another app).
+    return input.blinkKeyCommands + proGlobalKeyCommands()
   }
   
   @objc func onStuckOpCommand() {
@@ -766,6 +768,7 @@ extension SpaceController {
     case .sessionSwitcher: showSessionSwitcherAction()
     case .webSearch: showWebSearchAction()
     case .openCanvas: openCanvasSimpleAction()
+    case .hostJumper: showHostJumperAction()
 
     }
   }
@@ -779,7 +782,7 @@ extension SpaceController {
     currentTerm()?.scaleWithPich(pinch)
   }
   
-  private func _newShellAction(command: String = "", animated: Bool = true) {
+  func _newShellAction(command: String = "", animated: Bool = true) {
     let params = MCPParams()
     if !command.isEmpty {
       params.initialCommand = command

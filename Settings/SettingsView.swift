@@ -138,6 +138,11 @@ struct SettingsView: View {
         } details: {
           VoiceInputSettingsView()
         }
+        Row {
+          Label("Blink Pro", systemImage: "bolt")
+        } details: {
+          ProSettingsView()
+        }
         RowWithStoryBoardId(content: {
           Label("Smart Keys", systemImage: "keyboard.badge.ellipsis")
         }, storyBoardId: "BKSmartKeysConfigViewController")

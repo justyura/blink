@@ -485,6 +485,9 @@
 		EA09BA3F14E74BBAB8245B61 /* sshimport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4821D46054233AA0A6F6D /* sshimport.swift */; };
 		0917ACE3588C4C34A8C6C257 /* CommandPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A38D814C5A4C049F59B367 /* CommandPalette.swift */; };
 		9CE72DEA268F48FD9CBF7A24 /* SpaceController+Pro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6AB57B3EEF41A3A519CF8B /* SpaceController+Pro.swift */; };
+		BF8D61F6776F41FBA61DD42C /* ProSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46786AAB71849EDA948A4C1 /* ProSettings.swift */; };
+		0429AF780771492680C5353F /* ProSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6392CB56F74DCA876A3198 /* ProSettingsView.swift */; };
+		DC0EC273AF124788A7E782F5 /* BrowserVimScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC65CF1E3A4A989DCE9F11 /* BrowserVimScript.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1251,6 +1254,9 @@
 		4DF4821D46054233AA0A6F6D /* sshimport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sshimport.swift; sourceTree = "<group>"; };
 		A3A38D814C5A4C049F59B367 /* CommandPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandPalette.swift"; sourceTree = "<group>"; };
 		4B6AB57B3EEF41A3A519CF8B /* SpaceController+Pro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpaceController+Pro.swift"; sourceTree = "<group>"; };
+		F46786AAB71849EDA948A4C1 /* ProSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProSettings.swift; sourceTree = "<group>"; };
+		CB6392CB56F74DCA876A3198 /* ProSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProSettingsView.swift; sourceTree = "<group>"; };
+		1DBC65CF1E3A4A989DCE9F11 /* BrowserVimScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserVimScript.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -2513,6 +2519,9 @@
 		F888BE49F0AE42E3830B2C26 /* Pro */ = {
 			isa = PBXGroup;
 			children = (
+				1DBC65CF1E3A4A989DCE9F11 /* BrowserVimScript.swift */,
+				F46786AAB71849EDA948A4C1 /* ProSettings.swift */,
+				CB6392CB56F74DCA876A3198 /* ProSettingsView.swift */,
 				A3A38D814C5A4C049F59B367 /* CommandPalette.swift */,
 				4B6AB57B3EEF41A3A519CF8B /* SpaceController+Pro.swift */,
 			);
@@ -3502,6 +3511,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0EC273AF124788A7E782F5 /* BrowserVimScript.swift in Sources */,
+				BF8D61F6776F41FBA61DD42C /* ProSettings.swift in Sources */,
+				0429AF780771492680C5353F /* ProSettingsView.swift in Sources */,
 				0917ACE3588C4C34A8C6C257 /* CommandPalette.swift in Sources */,
 				9CE72DEA268F48FD9CBF7A24 /* SpaceController+Pro.swift in Sources */,
 				EA09BA3F14E74BBAB8245B61 /* sshimport.swift in Sources */,
