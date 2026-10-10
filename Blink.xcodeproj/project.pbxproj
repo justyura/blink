@@ -480,6 +480,9 @@
 		C43D63DDD88D4DFD87E0B514 /* VoiceInputSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432D75EE4CF44E558D761C12 /* VoiceInputSettings.swift */; };
 		66C7DE5A1A1C4ABCB1F38A2C /* VoiceInputSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98630FDD606E486DA4BF172D /* VoiceInputSettingsView.swift */; };
 		89D60FD9D3E345C59E79702E /* VoiceShiftTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC00CE8AA3C54F3DB24AE1EC /* VoiceShiftTracker.swift */; };
+		F4865121BD874E39A89A0E3E /* OpenAITranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A937202F054D3A884ACF0B /* OpenAITranscriber.swift */; };
+		83AE4A4573054095ABDF9307 /* SpeechTranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297264F4AFD040EDA6A09935 /* SpeechTranscriber.swift */; };
+		EA09BA3F14E74BBAB8245B61 /* sshimport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4821D46054233AA0A6F6D /* sshimport.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1241,6 +1244,9 @@
 		432D75EE4CF44E558D761C12 /* VoiceInputSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputSettings.swift; sourceTree = "<group>"; };
 		98630FDD606E486DA4BF172D /* VoiceInputSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputSettingsView.swift; sourceTree = "<group>"; };
 		BC00CE8AA3C54F3DB24AE1EC /* VoiceShiftTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceShiftTracker.swift; sourceTree = "<group>"; };
+		04A937202F054D3A884ACF0B /* OpenAITranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAITranscriber.swift; sourceTree = "<group>"; };
+		297264F4AFD040EDA6A09935 /* SpeechTranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechTranscriber.swift; sourceTree = "<group>"; };
+		4DF4821D46054233AA0A6F6D /* sshimport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sshimport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -2414,6 +2420,7 @@
 				D2F330D120A6EF020074ADD7 /* showkey.m */,
 				D2FBEC0727CF505D00FD974A /* browse.swift */,
 				D26A37EF26A0AB7000534A4D /* facecam.swift */,
+				4DF4821D46054233AA0A6F6D /* sshimport.swift */,
 				D266A9DB272A77A100C85EED /* code.swift */,
 				BD8152532743FF84002BB169 /* skstore.swift */,
 			);
@@ -2486,6 +2493,8 @@
 		DAF7D736629B4B8BAE5BD606 /* Voice */ = {
 			isa = PBXGroup;
 			children = (
+				04A937202F054D3A884ACF0B /* OpenAITranscriber.swift */,
+				297264F4AFD040EDA6A09935 /* SpeechTranscriber.swift */,
 				558036F8082448C1BC47E25F /* ElevenLabsTranscriber.swift */,
 				6A0ADFC8A22D43BEB43740BA /* VoiceInputHUD.swift */,
 				BDD3C73FE0B34A1EA7995A59 /* VoiceInputManager.swift */,
@@ -3479,6 +3488,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA09BA3F14E74BBAB8245B61 /* sshimport.swift in Sources */,
+				F4865121BD874E39A89A0E3E /* OpenAITranscriber.swift in Sources */,
+				83AE4A4573054095ABDF9307 /* SpeechTranscriber.swift in Sources */,
 				FE5967703FFB42498D933DB5 /* ElevenLabsTranscriber.swift in Sources */,
 				CE28286458014E25B9CF67C1 /* VoiceInputHUD.swift in Sources */,
 				944944082B544817AEB741EB /* VoiceInputManager.swift in Sources */,

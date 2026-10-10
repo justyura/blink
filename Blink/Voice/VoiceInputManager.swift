@@ -2,7 +2,7 @@
 //
 // B L I N K   P R O
 //
-// Records microphone audio, sends it to ElevenLabs Scribe and types the
+// Records microphone audio, sends it to a speech-to-text service and types the
 // transcript into the active terminal. Triggered by the right Shift key
 // (see SmarterTermInput+VoiceInput.swift).
 //
@@ -97,7 +97,7 @@ final class VoiceInputManager: NSObject {
     _targetDevice = Self._activeDevice()
 
     guard _settings.hasAPIKey else {
-      _flash(.failure, ElevenLabsError.missingAPIKey.localizedDescription)
+      _flash(.failure, TranscriberError.missingAPIKey(_settings.provider.title).localizedDescription)
       isPushToTalkRecording = false
       return
     }
@@ -180,12 +180,7 @@ final class VoiceInputManager: NSObject {
     _haptic(.light)
     _showHUD(.transcribing, "Transcribing…")
 
-    let transcriber = ElevenLabsTranscriber(
-      apiKey: _settings.apiKey,
-      modelId: _settings.modelId,
-      languageCode: _settings.languageCode,
-      keyterms: _settings.keytermsList
-    )
+    let transcriber = _settings.makeTranscriber()
 
     _transcribeTask = Task { [weak self] in
       do {

@@ -17,21 +17,30 @@ struct VoiceInputSettingsView: View {
     List {
       Section(
         header: Text("Voice Input"),
-        footer: Text("Press the right Shift key on a hardware keyboard to dictate. Speech is transcribed by ElevenLabs Scribe and typed into the active terminal, which makes talking to AI assistants in the shell fast.")
+        footer: Text("Press the right Shift key on a hardware keyboard to dictate. Speech is transcribed by OpenAI or ElevenLabs and typed into the active terminal, which makes talking to AI assistants in the shell fast.")
       ) {
         Toggle("Enable Voice Input", isOn: $settings.enabled)
       }
 
       Section(
-        header: Text("ElevenLabs"),
-        footer: Text("Create a key at elevenlabs.io › Profile › API Keys. It only needs the Speech to Text permission. The key is stored in the keychain.")
+        header: Text("Transcription"),
+        footer: Text(settings.provider.apiKeyHint)
       ) {
-        SecureField("API Key", text: $settings.apiKey)
+        Picker("Provider", selection: Binding(
+          get: { settings.provider },
+          set: { settings.select(provider: $0) }
+        )) {
+          ForEach(SpeechProvider.allCases) { provider in
+            Text(provider.title).tag(provider)
+          }
+        }
+        .onReceive(settings.$provider) { _ in _checkStatus = nil }
+        SecureField("\(settings.provider.title) API Key", text: $settings.apiKey)
           .textContentType(.password)
           .autocapitalization(.none)
           .disableAutocorrection(true)
         Picker("Model", selection: $settings.modelId) {
-          ForEach(VoiceInputSettings.availableModels, id: \.id) { model in
+          ForEach(settings.provider.availableModels, id: \.id) { model in
             Text(model.title).tag(model.id)
           }
         }
@@ -85,7 +94,7 @@ struct VoiceInputSettingsView: View {
 
       Section(
         header: Text("Key Terms"),
-        footer: Text("Comma separated words the transcriber should favour, for example tool names or project jargon.")
+        footer: Text("Comma separated words the transcriber should favour, for example tool names or project jargon. Sent as the prompt to OpenAI, or as key terms to ElevenLabs.")
       ) {
         TextField("Claude, kubectl, Blink", text: $settings.keyterms)
           .autocapitalization(.none)
@@ -99,7 +108,7 @@ struct VoiceInputSettingsView: View {
   private func _checkKey() {
     _checking = true
     _checkStatus = nil
-    let transcriber = ElevenLabsTranscriber(apiKey: settings.apiKey)
+    let transcriber = settings.makeTranscriber()
     Task {
       let result: String
       do {

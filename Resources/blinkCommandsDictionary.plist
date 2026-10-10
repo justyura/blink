@@ -58,6 +58,13 @@
 		<string></string>
 		<string>no</string>
 	</array>
+	<key>ssh-import</key>
+	<array>
+		<string>MAIN</string>
+		<string>ssh_import_main</string>
+		<string>file</string>
+		<string>no</string>
+	</array>
 	<key>ssh-add</key>
 	<array>
 		<string>MAIN</string>

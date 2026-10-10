@@ -78,8 +78,8 @@ This fork adds hands-free dictation on top of Blink Shell, aimed at talking to A
 
 - **Right Shift** on a hardware keyboard triggers voice input. Pressing any other key while
   Shift is held keeps the normal Shift+key chord, so typing is unaffected.
-- Audio is transcribed by **ElevenLabs Scribe** (`scribe_v2` by default) and typed into the
-  focused terminal, exactly as if you had entered it on the keyboard.
+- Audio is transcribed by **OpenAI `gpt-4o-transcribe`** (default) or **ElevenLabs Scribe**
+  and typed into the focused terminal, exactly as if you had entered it on the keyboard.
 - Two trigger styles: **Push to Talk** (hold to record, release to send) or **Toggle**
   (tap to start, tap again to stop).
 - Options for appending a space, pressing Enter automatically, a fixed language code and
@@ -88,12 +88,23 @@ This fork adds hands-free dictation on top of Blink Shell, aimed at talking to A
 ### Setup
 
 1. Build and install Blink Pro (see [Build](#build) below).
-2. Get an ElevenLabs API key with the *Speech to Text* permission.
-3. In Blink open **Settings › Voice Input**, paste the key and tap *Check API Key*.
+2. Get an OpenAI API key (or an ElevenLabs key with the *Speech to Text* permission).
+3. In Blink open **Settings › Voice Input**, pick the provider, paste the key and tap *Check API Key*.
 4. Press and hold right Shift, speak, release. The transcript is typed into the terminal.
 
 The API key is stored in the iOS keychain. Audio is recorded to a temporary file and deleted
 after each transcription. The implementation lives in `Blink/Voice/`.
+
+### Sync your Mac's SSH config to the device
+
+```bash
+tools/sync-ssh-to-ipad.sh            # pushes ~/.ssh/config, referenced keys and known_hosts
+```
+
+Then run `ssh-import` inside Blink Pro. It installs `~/.ssh/config` (with `IdentityFile`
+rewritten to key names), imports the private keys into the Blink keychain and merges
+`known_hosts`. Keys protected by a passphrase are skipped and can be imported from
+Settings › Keys. Use `ssh-import --force` to replace keys that already exist.
 
 ## Build
 ![CI](https://github.com/blinksh/blink/workflows/CI/badge.svg)
