@@ -228,6 +228,10 @@ import WebKit
     webView?.load(URLRequest(url: url))
   }
 
+  func loadStartPage() {
+    webView?.loadHTMLString(BrowserVimScript.startPageHTML, baseURL: nil)
+  }
+
   @objc func _focusAddress() {
     _addressField.becomeFirstResponder()
     _addressField.selectAll(nil)

@@ -143,6 +143,18 @@ enum BrowserVimScript {
   }, true);
 
   window.addEventListener('scroll', function () { if (hints) { clearHints(); } }, { passive: true });
+
+  // Pages like Google autofocus their search box, which would swallow j/k and
+  // Option shortcuts. Release that focus unless the user interacted with the page.
+  var interacted = false;
+  window.addEventListener('pointerdown', function () { interacted = true; }, true);
+  window.addEventListener('keydown', function (e) {
+    if (!e.metaKey && !e.altKey && !e.ctrlKey && isEditable(document.activeElement) && e.key.length === 1) { interacted = true; }
+  }, true);
+  function releaseAutofocus() {
+    if (!interacted && isEditable(document.activeElement)) { document.activeElement.blur(); }
+  }
+  [0, 300, 1000, 2500].forEach(function (ms) { setTimeout(releaseAutofocus, ms); });
 })();
 """#
 
@@ -172,6 +184,32 @@ enum BrowserVimScript {
   }, true);
 })();
 """#
+
+  /// Local start page shown the first time the browser is toggled open.
+  static let startPageHTML = """
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html,body{margin:0;height:100%;background:#0f1115;color:#c9d1d9;font:16px/1.6 -apple-system,Helvetica,sans-serif}
+  main{max-width:640px;margin:0 auto;padding:12vh 24px}
+  h1{font-size:22px;font-weight:600;color:#fff;margin:0 0 6px}
+  p{color:#8b949e;margin:0 0 28px}
+  table{border-collapse:collapse;width:100%}
+  td{padding:6px 0;border-bottom:1px solid #21262d}
+  td:first-child{width:160px;font-family:ui-monospace,Menlo,monospace;color:#79c0ff}
+</style></head><body><main>
+<h1>Blink Pro Browser</h1>
+<p>Type in the address bar to search. Esc returns to the page.</p>
+<table>
+<tr><td>⌥O · o · /</td><td>Address bar</td></tr>
+<tr><td>f</td><td>Link hints: type the label to click</td></tr>
+<tr><td>j k · d u · gg G</td><td>Scroll</td></tr>
+<tr><td>H L · r</td><td>Back, forward, reload</td></tr>
+<tr><td>y · x</td><td>Copy URL · hide browser</td></tr>
+<tr><td>⌥C · ⌘W</td><td>Hide browser (page is kept)</td></tr>
+<tr><td>⌥⇧C</td><td>Reset browser (kills a stuck page)</td></tr>
+</table>
+</main></body></html>
+"""
 
   /// CSS that inverts the page for "force dark" while keeping media natural.
   static let forceDarkCSS = #"""

@@ -278,19 +278,19 @@ extension SpaceController {
       return
     }
     let browser = ProBrowser.shared.controller()
-    if browser.webView?.url == nil {
-      // First use: open the search engine's home page.
-      if let home = BrowserController.url(forInput: ProSettings.shared.searchTemplate.components(separatedBy: "/").prefix(3).joined(separator: "/")) {
-        browser.load(home)
-      }
+    let firstUse = browser.webView?.url == nil
+    if firstUse {
+      browser.loadStartPage()
     }
-    sp._presentProBrowser()
+    sp._presentProBrowser(focusAddress: firstUse)
   }
 
-  func _presentProBrowser() {
+  func _presentProBrowser(focusAddress: Bool = false) {
     guard presentedViewController == nil else { return }
     currentTerm()?.resignInput()
-    present(ProBrowser.shared.navigation, animated: true)
+    present(ProBrowser.shared.navigation, animated: true) {
+      if focusAddress { ProBrowser.shared.controller()._focusAddress() }
+    }
   }
 
   // MARK: - App hopping (Option+B)
