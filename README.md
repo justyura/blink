@@ -102,18 +102,25 @@ after each transcription. The implementation lives in `Blink/Voice/`.
 | ⌥F | Host jumper: lists the hosts from `~/.ssh/config` and Blink's Hosts. ⏎ jumps to that host's open session or connects with ssh (or mosh, see Settings › Blink Pro). `local` returns to a plain Blink shell. |
 | ⌥J | Session jumper: a palette listing every open session by its terminal title. Type to filter, ↑↓ and ⏎ to switch, or type the session number. |
 | ⌥1 … ⌥9 | Jump straight to session 1…9. |
-| ⌥O | Web search bar: type a query or URL, ⏎ opens it in the built-in browser (⌘L / ⌥O address bar, ⌘[ ⌘] back/forward, ⌘W closes). Inside pages: `j`/`k` scroll, `d`/`u` half page, `gg`/`G`, `f` link hints (type the label to click), `H`/`L` history, `r` reload, `o` address bar, `y` copy URL, `x` close. |
+| ⌥O | Web search bar: type a query or URL, ⏎ opens it in Safari (default) or in the built-in browser (Settings › Blink Pro › Open in Safari) (⌘L / ⌥O address bar, ⌘[ ⌘] back/forward, ⌘W closes). Inside pages: `j`/`k` scroll, `d`/`u` half page, `gg`/`G`, `f` link hints (type the label to click), `H`/`L` history, `r` reload, `o` address bar, `y` copy URL, `x` close. |
 | ⌥C | Toggle the built-in browser. Hiding it keeps the page and history, so it comes back instantly. Works even while a page is hung or the address bar is focused. ⌥⇧C discards the browser (kills a stuck page), ⌘. stops loading. |
 | ⌥B | Jump to the Canvas Simple app (`canvassimple://`). Canvas Simple jumps back with ⌥B via `blinkpro://`. |
 
-On iPhone, or whenever the software keyboard is up, the smart keys bar has a 🎤 key (tap to record,
-tap again to transcribe) and a ⚡ key that opens a menu with all of the above, so everything works
+On iPhone, or whenever the software keyboard is up, the smart keys bar has a 🎤 key (tap, speak, it sends
+after a pause; tap again to send immediately) and a ⚡ key that opens a menu with all of the above, so everything works
 by touch too.
 
 All of these are regular Blink shortcuts, so they can be changed in Settings › Keyboard › Shortcuts.
 Settings › Blink Pro holds the search engine (Google, DuckDuckGo, Bing, Kagi, Baidu or a custom
 `%s` template), the browser night mode (System / Dark / Force Dark), the Vim keys toggle and
 whether the host jumper connects with ssh or mosh.
+
+### iCloud between your devices
+
+Voice and Blink Pro settings, the API keys (iCloud Keychain), `~/.ssh/config` and `known_hosts`
+sync through iCloud, so a second device picks them up after signing in with the same Apple ID.
+Private keys are deliberately not synced: run `tools/sync-ssh-to-ipad.sh --device <udid>` for each
+device or import them in Settings › Keys. Blink's own Hosts sync is in Settings › Hosts.
 
 ### Sync your Mac's SSH config to the device
 
