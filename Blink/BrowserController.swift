@@ -56,7 +56,7 @@ import WebKit
   }
 
   private var _urlObservation: NSKeyValueObservation?
-  private let _addressField = UITextField()
+  private let _addressField = ProAddressField()
 
   
   @objc public var webView: WKWebView? = nil {
@@ -86,6 +86,11 @@ import WebKit
     _addressField.clearButtonMode = .whileEditing
     _addressField.font = UIFont.systemFont(ofSize: 15)
     _addressField.delegate = self
+    _addressField.onEscape = { [weak self] in
+      guard let self = self else { return }
+      self._addressField.text = self.webView?.url?.absoluteString
+      self._addressField.resignFirstResponder()
+    }
     _addressField.frame = CGRect(x: 0, y: 0, width: 720, height: 34)
     _addressField.autoresizingMask = [.flexibleWidth]
     navigationItem.titleView = _addressField
@@ -224,4 +229,19 @@ import WebKit
     textField.resignFirstResponder()
     return true
   }
+}
+
+/// Address field that handles Esc itself: the navigation bar is not in the
+/// BrowserController responder chain, so the controller's key commands never
+/// see keys typed here.
+final class ProAddressField: UITextField {
+  var onEscape: () -> Void = {}
+
+  override var keyCommands: [UIKeyCommand]? {
+    let esc = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(_escape))
+    esc.wantsPriorityOverSystemBehavior = true
+    return [esc]
+  }
+
+  @objc private func _escape() { onEscape() }
 }

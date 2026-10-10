@@ -355,6 +355,21 @@ final class ProBrowser {
     return "\(s.browserVimKeys)|\(s.browserTheme.rawValue)"
   }
 
+  /// Drops the current web view (for example when a page hung) so the next
+  /// use starts from a fresh one.
+  func reset(dismissingFrom presenter: UIViewController?) {
+    let nav = navigation
+    _controller?.webView?.stopLoading()
+    _controller = nil
+    _signature = ""
+    navigation = UINavigationController()
+    if presenter?.presentedViewController === nav {
+      presenter?.dismiss(animated: true) {
+        (presenter as? SpaceController)?.focusOnShellAction()
+      }
+    }
+  }
+
   func controller() -> BrowserController {
     if let c = _controller, _signature == _currentSignature { return c }
 

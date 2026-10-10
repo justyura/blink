@@ -233,7 +233,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       return
     }
 
-    let window = UIWindow(windowScene: windowScene)
+    let window = ProWindow(windowScene: windowScene)
     self.window = window
 
     window.rootViewController = _spCtrl

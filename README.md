@@ -103,7 +103,7 @@ after each transcription. The implementation lives in `Blink/Voice/`.
 | ⌥J | Session jumper: a palette listing every open session by its terminal title. Type to filter, ↑↓ and ⏎ to switch, or type the session number. |
 | ⌥1 … ⌥9 | Jump straight to session 1…9. |
 | ⌥O | Web search bar: type a query or URL, ⏎ opens it in the built-in browser (⌘L / ⌥O address bar, ⌘[ ⌘] back/forward, ⌘W closes). Inside pages: `j`/`k` scroll, `d`/`u` half page, `gg`/`G`, `f` link hints (type the label to click), `H`/`L` history, `r` reload, `o` address bar, `y` copy URL, `x` close. |
-| ⌥C | Toggle the built-in browser. Hiding it keeps the page and history, so it comes back instantly. |
+| ⌥C | Toggle the built-in browser. Hiding it keeps the page and history, so it comes back instantly. Works even while a page is hung or the address bar is focused. ⌥⇧C discards the browser (kills a stuck page), ⌘. stops loading. |
 | ⌥B | Jump to the Canvas Simple app (`canvassimple://`). Canvas Simple jumps back with ⌥B via `blinkpro://`. |
 
 All of these are regular Blink shortcuts, so they can be changed in Settings › Keyboard › Shortcuts.
