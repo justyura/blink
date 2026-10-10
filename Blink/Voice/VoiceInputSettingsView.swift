@@ -86,10 +86,11 @@ struct VoiceInputSettingsView: View {
 
       Section(
         header: Text("After Transcription"),
-        footer: Text("\"Press Enter\" submits the dictated text right away, which is handy for chat-style AI tools.")
+        footer: Text("\"Press Enter\" submits the dictated text right away, which is handy for chat-style AI tools. \"Stop after a pause\" ends a tap-to-talk recording about 1.5 s after you stop speaking.")
       ) {
         Toggle("Append Space", isOn: $settings.appendSpace)
         Toggle("Press Enter", isOn: $settings.pressEnter)
+        Toggle("Stop after a pause", isOn: $settings.autoStopOnSilence)
       }
 
       Section(

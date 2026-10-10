@@ -328,6 +328,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     let spCtrl = _spCtrl
 
+    // Blink Pro: pick up settings and ssh files from iCloud.
+    ProCloudSync.shared.start()
+
     // Blink Pro: always hand keyboard focus back to the terminal when returning from
     // another app, so typing works immediately. Retry once in case the first attempt
     // raced with the scene transition.

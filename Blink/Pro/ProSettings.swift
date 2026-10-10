@@ -73,6 +73,7 @@ final class ProSettings: ObservableObject {
     static let browserTheme = "blinkpro.browserTheme"
     static let vimKeys = "blinkpro.browserVimKeys"
     static let hostConnect = "blinkpro.hostConnect"
+    static let searchInSafari = "blinkpro.searchInSafari"
   }
 
   private let _d = UserDefaults.standard
@@ -100,6 +101,11 @@ final class ProSettings: ObservableObject {
     didSet { _d.set(hostConnect.rawValue, forKey: Keys.hostConnect) }
   }
 
+  /// Option+O results open in Safari instead of the built-in browser.
+  @Published var searchOpensInSafari: Bool {
+    didSet { _d.set(searchOpensInSafari, forKey: Keys.searchInSafari) }
+  }
+
   /// The effective search URL template (`%s` placeholder).
   var searchTemplate: String {
     if searchEngine == .custom {
@@ -117,5 +123,17 @@ final class ProSettings: ObservableObject {
     browserTheme = BrowserTheme(rawValue: d.string(forKey: Keys.browserTheme) ?? "") ?? .system
     browserVimKeys = d.object(forKey: Keys.vimKeys) as? Bool ?? true
     hostConnect = HostConnectCommand(rawValue: d.string(forKey: Keys.hostConnect) ?? "") ?? .ssh
+    searchOpensInSafari = d.object(forKey: Keys.searchInSafari) as? Bool ?? true
+  }
+
+  /// Re-read everything after settings arrived from iCloud.
+  func reload() {
+    let d = UserDefaults.standard
+    searchEngine = SearchEngine(rawValue: d.string(forKey: Keys.searchEngine) ?? "") ?? .google
+    customSearchURL = d.string(forKey: Keys.customSearchURL) ?? ""
+    browserTheme = BrowserTheme(rawValue: d.string(forKey: Keys.browserTheme) ?? "") ?? .system
+    browserVimKeys = d.object(forKey: Keys.vimKeys) as? Bool ?? true
+    hostConnect = HostConnectCommand(rawValue: d.string(forKey: Keys.hostConnect) ?? "") ?? .ssh
+    searchOpensInSafari = d.object(forKey: Keys.searchInSafari) as? Bool ?? true
   }
 }

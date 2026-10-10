@@ -30,6 +30,9 @@ final class VoiceInputManager: NSObject {
   private var _recordingURL: URL?
   private var _hud: VoiceInputHUD?
   private var _meterTimer: Timer?
+  private var _recordingStartedAt: Date?
+  private var _speechDetected = false
+  private var _lastLoudAt: Date?
   private var _sessionWasActivated = false
   private weak var _targetDevice: TermDevice?
   private var _transcribeTask: Task<Void, Never>?
@@ -155,9 +158,13 @@ final class VoiceInputManager: NSObject {
     }
 
     _haptic(.medium)
-    _showHUD(.listening, _settings.mode == .pushToTalk && isPushToTalkRecording
+    _recordingStartedAt = Date()
+    _speechDetected = false
+    _lastLoudAt = nil
+    let autoStop = _settings.autoStopOnSilence && !isPushToTalkRecording
+    _showHUD(.listening, isPushToTalkRecording
              ? "Listening… release Shift to send"
-             : "Listening… tap mic or right Shift to stop")
+             : (autoStop ? "Listening… pause to send, tap mic to stop" : "Listening… tap mic or right Shift to stop"))
     _startMetering()
   }
 
@@ -264,7 +271,30 @@ final class VoiceInputManager: NSObject {
         let power = recorder.averagePower(forChannel: 0) // dB, -160...0
         let normalized = CGFloat(max(0, (power + 50) / 50))
         self._hud?.setLevel(normalized)
+        self._checkSilence(power: power)
       }
+    }
+  }
+
+  /// Tap-to-talk: finish ~1.5 s after speech stops, give up after 8 s of nothing,
+  /// and cap recordings at 90 s.
+  private func _checkSilence(power: Float) {
+    guard state == .recording, !isPushToTalkRecording, _settings.autoStopOnSilence,
+          let started = _recordingStartedAt else { return }
+    let now = Date()
+    let loud = power > -38
+    if loud {
+      _speechDetected = true
+      _lastLoudAt = now
+    }
+    let elapsed = now.timeIntervalSince(started)
+    if _speechDetected, let last = _lastLoudAt, now.timeIntervalSince(last) > 1.5 {
+      _finishRecordingAndTranscribe()
+    } else if !_speechDetected && elapsed > 8 {
+      cancel()
+      _flash(.failure, "No speech detected")
+    } else if elapsed > 90 {
+      _finishRecordingAndTranscribe()
     }
   }
 

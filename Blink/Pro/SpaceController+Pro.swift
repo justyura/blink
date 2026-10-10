@@ -278,14 +278,18 @@ extension SpaceController {
     let model = PaletteModel(
       title: ProSettings.shared.searchEngine.title,
       placeholder: "Search or enter a URL",
-      footer: "⏎ open in the built-in browser · esc close"
+      footer: ProSettings.shared.searchOpensInSafari ? "⏎ open in Safari · esc close" : "⏎ open in the built-in browser · esc close"
     )
     model.onSubmit = { [weak sp] query, _ in
       guard let sp = sp else { return }
       sp._dismissProPalette()
       let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
       guard !q.isEmpty, let url = BrowserController.url(forInput: q) else { return }
-      sp.proOpenBrowser(url: url)
+      if ProSettings.shared.searchOpensInSafari {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+      } else {
+        sp.proOpenBrowser(url: url)
+      }
     }
     model.onCancel = { [weak sp] in sp?._dismissProPalette() }
     sp._presentProPalette(model: model)

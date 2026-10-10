@@ -127,6 +127,7 @@ struct SSHImport: NonStdIOCommand {
 
     if !dryRun {
       BKPubKey.loadIDS()
+      ProCloudSync.shared.pushFiles()
     }
     print("Done. \(imported) item(s) imported, \(skipped) skipped.")
   }

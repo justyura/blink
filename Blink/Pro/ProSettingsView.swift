@@ -29,6 +29,7 @@ struct ProSettingsView: View {
                      ? "Custom URL with %s where the query goes, for example https://www.perplexity.ai/search?q=%s"
                      : "Typed text that looks like a URL opens directly, anything else is searched.")
       ) {
+        Toggle("Open in Safari", isOn: $settings.searchOpensInSafari)
         Picker("Search engine", selection: $settings.searchEngine) {
           ForEach(SearchEngine.allCases) { Text($0.title).tag($0) }
         }
@@ -38,6 +39,18 @@ struct ProSettingsView: View {
             .autocapitalization(.none)
             .disableAutocorrection(true)
         }
+      }
+
+      Section(
+        header: Text("iCloud"),
+        footer: Text("Voice and Blink Pro settings, API keys (iCloud Keychain), ~/.ssh/config and known_hosts are synced between your devices. Private keys are not synced; import them on each device. Blink's own Hosts sync is in Settings › Hosts.")
+      ) {
+        HStack {
+          Text("Status")
+          Spacer()
+          Text(ProCloudSync.shared.statusDescription).foregroundColor(.secondary)
+        }
+        Button("Sync now") { ProCloudSync.shared.sync(force: true) }
       }
 
       Section(

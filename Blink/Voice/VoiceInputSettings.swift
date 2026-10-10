@@ -51,6 +51,7 @@ final class VoiceInputSettings: ObservableObject {
     static let appendSpace = "voiceInput.appendSpace"
     static let pressEnter = "voiceInput.pressEnter"
     static let keyterms = "voiceInput.keyterms"
+    static let autoStop = "voiceInput.autoStop"
   }
 
   private static let keychainService = "sh.blink.voice"
@@ -62,7 +63,11 @@ final class VoiceInputSettings: ObservableObject {
   }
 
   private let _defaults = UserDefaults.standard
-  private let _keychain = UICKeyChainStore(service: VoiceInputSettings.keychainService)
+  private let _keychain: UICKeyChainStore = {
+    let store = UICKeyChainStore(service: VoiceInputSettings.keychainService)
+    store.synchronizable = true   // iCloud Keychain: the API key follows you to every device
+    return store
+  }()
 
   @Published var enabled: Bool {
     didSet { _defaults.set(enabled, forKey: Keys.enabled) }
@@ -100,6 +105,11 @@ final class VoiceInputSettings: ObservableObject {
   /// Comma separated key terms that bias the transcriber (e.g. "Claude, Blink, kubectl").
   @Published var keyterms: String {
     didSet { _defaults.set(keyterms, forKey: Keys.keyterms) }
+  }
+
+  /// For tap-to-talk (mic key / toggle mode): stop automatically after a pause.
+  @Published var autoStopOnSilence: Bool {
+    didSet { _defaults.set(autoStopOnSilence, forKey: Keys.autoStop) }
   }
 
   /// API key for the selected provider. Stored in the keychain, never in UserDefaults.
@@ -151,7 +161,34 @@ final class VoiceInputSettings: ObservableObject {
     appendSpace = d.object(forKey: Keys.appendSpace) as? Bool ?? true
     pressEnter = d.object(forKey: Keys.pressEnter) as? Bool ?? false
     keyterms = d.string(forKey: Keys.keyterms) ?? ""
-    apiKey = UICKeyChainStore(service: VoiceInputSettings.keychainService)
-      .string(forKey: VoiceInputSettings.keychainAPIKey(p)) ?? ""
+    autoStopOnSilence = d.object(forKey: Keys.autoStop) as? Bool ?? true
+    let synced = UICKeyChainStore(service: VoiceInputSettings.keychainService)
+    synced.synchronizable = true
+    let local = UICKeyChainStore(service: VoiceInputSettings.keychainService)
+    // Migrate keys saved before iCloud Keychain sync was enabled.
+    for provider in SpeechProvider.allCases {
+      let k = VoiceInputSettings.keychainAPIKey(provider)
+      if synced.string(forKey: k) == nil, let old = local.string(forKey: k) {
+        synced.setString(old, forKey: k)
+        local.removeItem(forKey: k)
+      }
+    }
+    apiKey = synced.string(forKey: VoiceInputSettings.keychainAPIKey(p)) ?? ""
+  }
+
+  /// Re-read everything after settings arrived from iCloud.
+  func reload() {
+    let d = UserDefaults.standard
+    enabled = d.object(forKey: Keys.enabled) as? Bool ?? true
+    mode = VoiceInputMode(rawValue: d.string(forKey: Keys.mode) ?? "") ?? .pushToTalk
+    let p = SpeechProvider(rawValue: d.string(forKey: Keys.provider) ?? "") ?? .openAI
+    provider = p
+    modelId = d.string(forKey: Keys.modelId(p)) ?? p.defaultModelId
+    languageCode = d.string(forKey: Keys.languageCode) ?? ""
+    appendSpace = d.object(forKey: Keys.appendSpace) as? Bool ?? true
+    pressEnter = d.object(forKey: Keys.pressEnter) as? Bool ?? false
+    keyterms = d.string(forKey: Keys.keyterms) ?? ""
+    autoStopOnSilence = d.object(forKey: Keys.autoStop) as? Bool ?? true
+    apiKey = _keychain.string(forKey: VoiceInputSettings.keychainAPIKey(p)) ?? ""
   }
 }
