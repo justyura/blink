@@ -377,10 +377,12 @@ final class ProBrowser {
     let config = WKWebViewConfiguration()
     config.allowsInlineMediaPlayback = true
     let browser = BrowserController()
+    config.userContentController.add(ProScriptMessageProxy(browser), name: BrowserVimScript.messageHandler)
+    config.userContentController.addUserScript(
+      WKUserScript(source: BrowserVimScript.hotkeys, injectionTime: .atDocumentStart, forMainFrameOnly: false))
     if settings.browserVimKeys {
       config.userContentController.addUserScript(
         WKUserScript(source: BrowserVimScript.source, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
-      config.userContentController.add(ProScriptMessageProxy(browser), name: BrowserVimScript.messageHandler)
     }
     if settings.browserTheme == .forceDark {
       config.userContentController.addUserScript(
@@ -409,6 +411,8 @@ final class ProBrowser {
 /// of both the web view and the address field, and claims Cmd+W / Option+C with
 /// priority over the system, otherwise iPadOS treats Cmd+W as "close window".
 final class ProBrowserNavigationController: UINavigationController {
+
+  override var canBecomeFirstResponder: Bool { true }
 
   override var keyCommands: [UIKeyCommand]? {
     let cmds = [

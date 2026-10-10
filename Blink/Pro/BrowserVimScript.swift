@@ -146,6 +146,33 @@ enum BrowserVimScript {
 })();
 """#
 
+  /// Always injected: hide/reset shortcuts intercepted in the page itself, in the
+  /// capture phase, so they work even while a page text box has focus (where the
+  /// web process would otherwise consume Option+C as a typed character).
+  static let hotkeys = #"""
+(function () {
+  if (window.__blinkProHotkeys) { return; }
+  window.__blinkProHotkeys = true;
+  function post(action) {
+    try { window.webkit.messageHandlers.blinkpro.postMessage({ action: action, payload: null }); } catch (e) {}
+  }
+  window.addEventListener('keydown', function (e) {
+    var k = (e.key || '').toLowerCase();
+    var alt = e.altKey && !e.metaKey && !e.ctrlKey;
+    var meta = e.metaKey && !e.altKey && !e.ctrlKey;
+    if ((alt && !e.shiftKey && (k === 'c' || k === 'ç')) || (meta && k === 'w')) {
+      e.preventDefault(); e.stopImmediatePropagation(); post('close');
+    } else if (alt && e.shiftKey && (k === 'c' || k === 'ç')) {
+      e.preventDefault(); e.stopImmediatePropagation(); post('reset');
+    } else if (meta && k === '.') {
+      e.preventDefault(); e.stopImmediatePropagation(); post('stop');
+    } else if (alt && (k === 'o' || k === 'ø')) {
+      e.preventDefault(); e.stopImmediatePropagation(); post('address');
+    }
+  }, true);
+})();
+"""#
+
   /// CSS that inverts the page for "force dark" while keeping media natural.
   static let forceDarkCSS = #"""
 (function () {

@@ -56,6 +56,10 @@ import WebKit
   }
 
   private var _urlObservation: NSKeyValueObservation?
+  private var _watchdog: Timer?
+  private var _pendingPing: Date?
+  /// True when the page stopped answering JavaScript pings; keys then bypass the web view.
+  private(set) var isHung = false
   private let _addressField = ProAddressField()
 
   
@@ -138,11 +142,51 @@ import WebKit
 
   public override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    webView?.becomeFirstResponder()
+    _focusPage()
+    _watchdog?.invalidate()
+    _watchdog = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] _ in self?._ping() }
+  }
+
+  public override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    _watchdog?.invalidate()
+    _watchdog = nil
+    _pendingPing = nil
   }
 
   public func textFieldDidEndEditing(_ textField: UITextField) {
-    webView?.becomeFirstResponder()
+    _focusPage()
+  }
+
+  /// Keys normally go to the page. While it is hung they go to the navigation
+  /// controller instead, whose key commands do not depend on the web process.
+  private func _focusPage() {
+    if isHung {
+      navigationController?.becomeFirstResponder()
+    } else {
+      webView?.becomeFirstResponder()
+    }
+  }
+
+  private func _ping() {
+    guard let webView = webView, !_addressField.isFirstResponder else { return }
+    if let started = _pendingPing {
+      if Date().timeIntervalSince(started) > 3 { _setHung(true) }
+      return
+    }
+    _pendingPing = Date()
+    webView.evaluateJavaScript("1") { [weak self] _, _ in
+      guard let self = self else { return }
+      self._pendingPing = nil
+      if self.isHung { self._setHung(false) }
+    }
+  }
+
+  private func _setHung(_ hung: Bool) {
+    guard hung != isHung else { return }
+    isHung = hung
+    navigationItem.prompt = hung ? "Page not responding · ⌥⇧C resets · ⌥C hides" : nil
+    _focusPage()
   }
 
   // MARK: - Messages from the injected Vim script
@@ -151,6 +195,8 @@ import WebKit
     switch action {
     case "address": _focusAddress()
     case "close": _close()
+    case "reset": ProBrowser.shared.reset(dismissingFrom: presentingViewController)
+    case "stop": webView?.stopLoading()
     case "copyURL":
       if let s = payload as? String { UIPasteboard.general.string = s }
     default: break
