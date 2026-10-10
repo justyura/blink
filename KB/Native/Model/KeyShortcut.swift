@@ -217,7 +217,21 @@ class KeyShortcut: ObservableObject, Codable, Identifiable {
 
       KeyShortcut(.configShow, .command, ","),
       Self.snippetsShowShortcut,
-      Self.scratchShowShortcut
+      Self.scratchShowShortcut,
+
+      // Blink Pro
+      KeyShortcut(.sessionSwitcher, .alternate, "j"),
+      KeyShortcut(.webSearch, .alternate, "o"),
+      KeyShortcut(.openCanvas, .alternate, "b"),
+      KeyShortcut(.tab1, .alternate, "1"),
+      KeyShortcut(.tab2, .alternate, "2"),
+      KeyShortcut(.tab3, .alternate, "3"),
+      KeyShortcut(.tab4, .alternate, "4"),
+      KeyShortcut(.tab5, .alternate, "5"),
+      KeyShortcut(.tab6, .alternate, "6"),
+      KeyShortcut(.tab7, .alternate, "7"),
+      KeyShortcut(.tab8, .alternate, "8"),
+      KeyShortcut(.tab9, .alternate, "9"),
     ]
   }
 }

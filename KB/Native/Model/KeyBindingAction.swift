@@ -69,6 +69,10 @@ enum Command: String, Codable, CaseIterable {
   case toggleQuickActions
   case toggleGeoTrack
   case hideKeyboard
+  // Blink Pro
+  case sessionSwitcher
+  case webSearch
+  case openCanvas
 
   var title: String {
     switch self {
@@ -111,6 +115,9 @@ enum Command: String, Codable, CaseIterable {
     case .toggleQuickActions:     return "Toggle Quick Actions"
     case .toggleGeoTrack:         return "Toggle Geo Track"
     case .hideKeyboard:           return "Hide Keyboard"
+    case .sessionSwitcher:        return "Session Jumper"
+    case .webSearch:              return "Web Search"
+    case .openCanvas:             return "Open Canvas Simple"
     }
   }
 }

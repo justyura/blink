@@ -483,6 +483,8 @@
 		F4865121BD874E39A89A0E3E /* OpenAITranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A937202F054D3A884ACF0B /* OpenAITranscriber.swift */; };
 		83AE4A4573054095ABDF9307 /* SpeechTranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297264F4AFD040EDA6A09935 /* SpeechTranscriber.swift */; };
 		EA09BA3F14E74BBAB8245B61 /* sshimport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4821D46054233AA0A6F6D /* sshimport.swift */; };
+		0917ACE3588C4C34A8C6C257 /* CommandPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A38D814C5A4C049F59B367 /* CommandPalette.swift */; };
+		9CE72DEA268F48FD9CBF7A24 /* SpaceController+Pro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6AB57B3EEF41A3A519CF8B /* SpaceController+Pro.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1247,6 +1249,8 @@
 		04A937202F054D3A884ACF0B /* OpenAITranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAITranscriber.swift; sourceTree = "<group>"; };
 		297264F4AFD040EDA6A09935 /* SpeechTranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechTranscriber.swift; sourceTree = "<group>"; };
 		4DF4821D46054233AA0A6F6D /* sshimport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sshimport.swift; sourceTree = "<group>"; };
+		A3A38D814C5A4C049F59B367 /* CommandPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandPalette.swift"; sourceTree = "<group>"; };
+		4B6AB57B3EEF41A3A519CF8B /* SpaceController+Pro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpaceController+Pro.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -1484,6 +1488,7 @@
 		0716B5231CFFAB9300268B5B /* Blink */ = {
 			isa = PBXGroup;
 			children = (
+				F888BE49F0AE42E3830B2C26 /* Pro */,
 				DAF7D736629B4B8BAE5BD606 /* Voice */,
 				D22277F02A26200B00D4C708 /* Snippets */,
 				D25DE9C32939EB63008246EB /* NonStdIO */,
@@ -2505,6 +2510,15 @@
 			path = Voice;
 			sourceTree = "<group>";
 		};
+		F888BE49F0AE42E3830B2C26 /* Pro */ = {
+			isa = PBXGroup;
+			children = (
+				A3A38D814C5A4C049F59B367 /* CommandPalette.swift */,
+				4B6AB57B3EEF41A3A519CF8B /* SpaceController+Pro.swift */,
+			);
+			path = Pro;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -3488,6 +3502,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0917ACE3588C4C34A8C6C257 /* CommandPalette.swift in Sources */,
+				9CE72DEA268F48FD9CBF7A24 /* SpaceController+Pro.swift in Sources */,
 				EA09BA3F14E74BBAB8245B61 /* sshimport.swift in Sources */,
 				F4865121BD874E39A89A0E3E /* OpenAITranscriber.swift in Sources */,
 				83AE4A4573054095ABDF9307 /* SpeechTranscriber.swift in Sources */,

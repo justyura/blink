@@ -56,21 +56,22 @@ class SpaceController: UIViewController {
   
   var sceneRole: UISceneSession.Role = UISceneSession.Role.windowApplication
   
-  private var _viewportsKeys = [UUID]()
-  private var _currentKey: UUID? = nil
+  var _viewportsKeys = [UUID]()
+  var _currentKey: UUID? = nil
   
   private var _hud: MBProgressHUD? = nil
   
-  private var _overlay = UIView()
+  var _overlay = UIView()
   private var _spaceControllerAnimating: Bool = false
   var stuckKeyCode: KeyCode? = nil
   
   private var _snippetsVC: SnippetsViewController? = nil
+  var _proPaletteVC: PaletteViewController? = nil
   private var _blinkMenu: BlinkMenu? = nil
   private var _bottomTapAreaView = UIView()
 
   // Snips Input Mode tracking
-  private var _isSnipsInputModeActive: Bool = false {
+  var _isSnipsInputModeActive: Bool = false {
     didSet {
       guard _isSnipsInputModeActive != oldValue else { return }
       _configureCapabilitiesForSnipsInputMode(_isSnipsInputModeActive)
@@ -134,6 +135,7 @@ class SpaceController: UIViewController {
     }
     
     _snippetsVC?.view.frame = _overlay.frame
+    _proPaletteVC?.view.frame = _overlay.frame
     
     if let menu = _blinkMenu {
       let size = _overlay.frame.size;
@@ -761,6 +763,9 @@ extension SpaceController {
     case .zoomOut: currentTerm()?.termView.decreaseFontSize()
     case .zoomReset: currentTerm()?.termView.resetFontSize()
     case .hideKeyboard: KBTracker.shared.input?.resignFirstResponder()
+    case .sessionSwitcher: showSessionSwitcherAction()
+    case .webSearch: showWebSearchAction()
+    case .openCanvas: openCanvasSimpleAction()
 
     }
   }
@@ -1149,7 +1154,7 @@ extension SpaceController {
     _moveToShell(key: uuidKey, animated: true)
   }
   
-  private func _moveToShell(key: UUID, animated: Bool = true) {
+  func _moveToShell(key: UUID, animated: Bool = true) {
     guard
       let currentKey = _currentKey,
       let currentIdx = _viewportsKeys.firstIndex(of: currentKey),

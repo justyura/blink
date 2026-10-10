@@ -97,6 +97,7 @@
 				<string>http</string>
 				<string>ssh</string>
 				<string>blinkshell</string>
+				<string>blinkpro</string>
 				<string>${BLINK_MIGRATION_SCHEME}</string>
 				<string>vscode</string>
 			</array>

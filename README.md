@@ -95,6 +95,18 @@ This fork adds hands-free dictation on top of Blink Shell, aimed at talking to A
 The API key is stored in the iOS keychain. Audio is recorded to a temporary file and deleted
 after each transcription. The implementation lives in `Blink/Voice/`.
 
+### Keyboard power features
+
+| Keys | What happens |
+|---|---|
+| ⌥J | Session jumper: a palette listing every open session by its terminal title. Type to filter, ↑↓ and ⏎ to switch, or type the session number. |
+| ⌥1 … ⌥9 | Jump straight to session 1…9. |
+| ⌥O | Web search bar: type a query or URL, ⏎ opens it in the built-in browser (⌘L / ⌥O address bar, ⌘[ ⌘] back/forward, ⌘W or esc closes). |
+| ⌥B | Jump to the Canvas Simple app (`canvassimple://`). Canvas Simple jumps back with ⌥B via `blinkpro://`. |
+
+All of these are regular Blink shortcuts, so they can be changed in Settings › Keyboard › Shortcuts.
+The search engine defaults to Google; set the `blinkpro.searchURL` user default to change it.
+
 ### Sync your Mac's SSH config to the device
 
 ```bash
