@@ -59,7 +59,7 @@ enum BrowserTheme: String, CaseIterable, Identifiable {
 }
 
 enum HostConnectCommand: String, CaseIterable, Identifiable {
-  case mosh, ssh
+  case ssh, mosh
   var id: String { rawValue }
   var title: String { rawValue }
 }
@@ -116,6 +116,6 @@ final class ProSettings: ObservableObject {
     customSearchURL = d.string(forKey: Keys.customSearchURL) ?? ""
     browserTheme = BrowserTheme(rawValue: d.string(forKey: Keys.browserTheme) ?? "") ?? .system
     browserVimKeys = d.object(forKey: Keys.vimKeys) as? Bool ?? true
-    hostConnect = HostConnectCommand(rawValue: d.string(forKey: Keys.hostConnect) ?? "") ?? .mosh
+    hostConnect = HostConnectCommand(rawValue: d.string(forKey: Keys.hostConnect) ?? "") ?? .ssh
   }
 }
