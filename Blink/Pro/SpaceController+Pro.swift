@@ -271,8 +271,10 @@ extension SpaceController {
   /// Option+C: show the browser (last page kept) or hide it.
   @objc func toggleBrowserAction() {
     let sp = _interactiveSpaceController()
-    if sp.presentedViewController === ProBrowser.shared.navigation {
-      sp.dismiss(animated: true) { sp.focusOnShellAction() }
+    if ProBrowser.shared.navigation.presentingViewController != nil {
+      // Hide, including anything the page presented on top of the browser.
+      let presenter = ProBrowser.shared.navigation.presentingViewController ?? sp
+      presenter.dismiss(animated: true) { sp.focusOnShellAction() }
       return
     }
     let browser = ProBrowser.shared.controller()

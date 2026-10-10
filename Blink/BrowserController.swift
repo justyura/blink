@@ -255,8 +255,20 @@ import WebKit
   }
   
   @objc func _close() {
-    self.dismiss(animated: true) {
-      UIApplication.shared.sendAction(#selector(SpaceController.focusOnShellAction), to: nil, from: nil, for: nil)
+    // Dismiss from the presenter so the whole browser goes away, including anything
+    // the page may have presented on top (select popovers, pickers, autofill).
+    // Calling dismiss on this controller would only close that top layer.
+    let presenter = navigationController?.presentingViewController ?? presentingViewController
+    guard let presenter = presenter else {
+      dismiss(animated: true)
+      return
+    }
+    presenter.dismiss(animated: true) {
+      if let sp = presenter as? SpaceController {
+        sp.focusOnShellAction()
+      } else {
+        UIApplication.shared.sendAction(#selector(SpaceController.focusOnShellAction), to: nil, from: nil, for: nil)
+      }
     }
   }
   
