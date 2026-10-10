@@ -344,7 +344,7 @@ final class ProScriptMessageProxy: NSObject, WKScriptMessageHandler {
 final class ProBrowser {
   static let shared = ProBrowser()
 
-  private(set) var navigation = UINavigationController()
+  private(set) var navigation: UINavigationController = ProBrowserNavigationController()
   private var _controller: BrowserController? = nil
   private var _signature = ""
 
@@ -362,7 +362,7 @@ final class ProBrowser {
     _controller?.webView?.stopLoading()
     _controller = nil
     _signature = ""
-    navigation = UINavigationController()
+    navigation = ProBrowserNavigationController()
     if presenter?.presentedViewController === nav {
       presenter?.dismiss(animated: true) {
         (presenter as? SpaceController)?.focusOnShellAction()
@@ -394,7 +394,7 @@ final class ProBrowser {
     }
     browser.webView = webView
 
-    let nav = UINavigationController(rootViewController: browser)
+    let nav = ProBrowserNavigationController(rootViewController: browser)
     nav.modalPresentationStyle = .fullScreen
     nav.overrideUserInterfaceStyle = settings.browserTheme == .system ? .unspecified : .dark
 
@@ -402,5 +402,37 @@ final class ProBrowser {
     _controller = browser
     _signature = _currentSignature
     return browser
+  }
+}
+
+/// Navigation controller for the built-in browser. It sits in the responder chain
+/// of both the web view and the address field, and claims Cmd+W / Option+C with
+/// priority over the system, otherwise iPadOS treats Cmd+W as "close window".
+final class ProBrowserNavigationController: UINavigationController {
+
+  override var keyCommands: [UIKeyCommand]? {
+    let cmds = [
+      UIKeyCommand(title: "Hide Browser", action: #selector(_hide), input: "w", modifierFlags: .command),
+      UIKeyCommand(title: "Hide Browser", action: #selector(_hide), input: "c", modifierFlags: .alternate),
+      UIKeyCommand(title: "Reset Browser", action: #selector(_reset), input: "c", modifierFlags: [.alternate, .shift]),
+      UIKeyCommand(title: "Stop Loading", action: #selector(_stop), input: ".", modifierFlags: .command),
+    ]
+    cmds.forEach { $0.wantsPriorityOverSystemBehavior = true }
+    return cmds
+  }
+
+  @objc private func _hide() {
+    let presenter = presentingViewController
+    presenter?.dismiss(animated: true) {
+      (presenter as? SpaceController)?.focusOnShellAction()
+    }
+  }
+
+  @objc private func _reset() {
+    ProBrowser.shared.reset(dismissingFrom: presentingViewController)
+  }
+
+  @objc private func _stop() {
+    (viewControllers.first as? BrowserController)?.webView?.stopLoading()
   }
 }
