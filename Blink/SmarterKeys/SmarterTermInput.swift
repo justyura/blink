@@ -285,7 +285,11 @@ import Combine
   // These empty override methods have been removed as keyboard tracking
   // is now handled by UIKeyboardLayoutGuide in SpaceController
   
+  // Blink Pro: right Shift drives voice input (see Blink/Voice).
+  let voiceShiftTracker = VoiceShiftTracker()
+
   override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+    voiceShiftTracker.pressesBegan(presses)
     super.pressesBegan(presses, with: event)
     
     guard presses.count == 1, let press = presses.first, let key = press.key,
@@ -303,6 +307,16 @@ import Combine
     
     UIApplication.shared.sendAction(#selector(SpaceController.toggleQuickActionsAction), to: nil, from: nil, for: nil)
     commandPressTimestamp = 0
+  }
+
+  override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+    voiceShiftTracker.pressesEnded(presses)
+    super.pressesEnded(presses, with: event)
+  }
+
+  override func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+    voiceShiftTracker.pressesCancelled(presses)
+    super.pressesCancelled(presses, with: event)
   }
   
   var commandPressTimestamp: TimeInterval = 0

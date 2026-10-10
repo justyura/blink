@@ -12,7 +12,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Blink</string>
+	<string>Blink Pro</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIcons</key>
@@ -122,6 +122,8 @@
 	<string>keyboard</string>
 	<key>NSCameraUsageDescription</key>
 	<string>to show FaceCam widget</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Voice input: record speech to transcribe it into the terminal</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Use Face ID with Auto Lock</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

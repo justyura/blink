@@ -71,6 +71,30 @@ Bugs should be reported here on GitHub. If you have any questions or want to mak
 
 We can't wait to receive your valuable feedback. Enjoy!
 
+## Blink Pro: voice input
+
+This fork adds hands-free dictation on top of Blink Shell, aimed at talking to AI assistants
+(Claude Code, Codex, aider, …) that run in the terminal.
+
+- **Right Shift** on a hardware keyboard triggers voice input. Pressing any other key while
+  Shift is held keeps the normal Shift+key chord, so typing is unaffected.
+- Audio is transcribed by **ElevenLabs Scribe** (`scribe_v2` by default) and typed into the
+  focused terminal, exactly as if you had entered it on the keyboard.
+- Two trigger styles: **Push to Talk** (hold to record, release to send) or **Toggle**
+  (tap to start, tap again to stop).
+- Options for appending a space, pressing Enter automatically, a fixed language code and
+  key terms that bias recognition.
+
+### Setup
+
+1. Build and install Blink Pro (see [Build](#build) below).
+2. Get an ElevenLabs API key with the *Speech to Text* permission.
+3. In Blink open **Settings › Voice Input**, paste the key and tap *Check API Key*.
+4. Press and hold right Shift, speak, release. The transcript is typed into the terminal.
+
+The API key is stored in the iOS keychain. Audio is recorded to a temporary file and deleted
+after each transcription. The implementation lives in `Blink/Voice/`.
+
 ## Build
 ![CI](https://github.com/blinksh/blink/workflows/CI/badge.svg)
 

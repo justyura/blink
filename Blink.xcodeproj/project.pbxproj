@@ -474,6 +474,12 @@
 		D2F330DA20A7127B0074ADD7 /* open.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F330D920A7127B0074ADD7 /* open.m */; };
 		D2FBEC0B27CF505D00FD974A /* browse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FBEC0727CF505D00FD974A /* browse.swift */; };
 		D2FCB4DD2339F9DB00A88108 /* UIScrollView+Paging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FCB4DC2339F9DB00A88108 /* UIScrollView+Paging.swift */; };
+		FE5967703FFB42498D933DB5 /* ElevenLabsTranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558036F8082448C1BC47E25F /* ElevenLabsTranscriber.swift */; };
+		CE28286458014E25B9CF67C1 /* VoiceInputHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0ADFC8A22D43BEB43740BA /* VoiceInputHUD.swift */; };
+		944944082B544817AEB741EB /* VoiceInputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD3C73FE0B34A1EA7995A59 /* VoiceInputManager.swift */; };
+		C43D63DDD88D4DFD87E0B514 /* VoiceInputSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432D75EE4CF44E558D761C12 /* VoiceInputSettings.swift */; };
+		66C7DE5A1A1C4ABCB1F38A2C /* VoiceInputSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98630FDD606E486DA4BF172D /* VoiceInputSettingsView.swift */; };
+		89D60FD9D3E345C59E79702E /* VoiceShiftTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC00CE8AA3C54F3DB24AE1EC /* VoiceShiftTracker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1229,6 +1235,12 @@
 		D2FBEC0727CF505D00FD974A /* browse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = browse.swift; sourceTree = "<group>"; };
 		D2FCB4DC2339F9DB00A88108 /* UIScrollView+Paging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Paging.swift"; sourceTree = "<group>"; };
 		EA0BA18B1C0CC57B00719C1A /* Blink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blink.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		558036F8082448C1BC47E25F /* ElevenLabsTranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevenLabsTranscriber.swift; sourceTree = "<group>"; };
+		6A0ADFC8A22D43BEB43740BA /* VoiceInputHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputHUD.swift; sourceTree = "<group>"; };
+		BDD3C73FE0B34A1EA7995A59 /* VoiceInputManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputManager.swift; sourceTree = "<group>"; };
+		432D75EE4CF44E558D761C12 /* VoiceInputSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputSettings.swift; sourceTree = "<group>"; };
+		98630FDD606E486DA4BF172D /* VoiceInputSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputSettingsView.swift; sourceTree = "<group>"; };
+		BC00CE8AA3C54F3DB24AE1EC /* VoiceShiftTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceShiftTracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -1466,6 +1478,7 @@
 		0716B5231CFFAB9300268B5B /* Blink */ = {
 			isa = PBXGroup;
 			children = (
+				DAF7D736629B4B8BAE5BD606 /* Voice */,
 				D22277F02A26200B00D4C708 /* Snippets */,
 				D25DE9C32939EB63008246EB /* NonStdIO */,
 				D264D2AE28F8457A002B1B14 /* WhatsNew */,
@@ -2470,6 +2483,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DAF7D736629B4B8BAE5BD606 /* Voice */ = {
+			isa = PBXGroup;
+			children = (
+				558036F8082448C1BC47E25F /* ElevenLabsTranscriber.swift */,
+				6A0ADFC8A22D43BEB43740BA /* VoiceInputHUD.swift */,
+				BDD3C73FE0B34A1EA7995A59 /* VoiceInputManager.swift */,
+				432D75EE4CF44E558D761C12 /* VoiceInputSettings.swift */,
+				98630FDD606E486DA4BF172D /* VoiceInputSettingsView.swift */,
+				BC00CE8AA3C54F3DB24AE1EC /* VoiceShiftTracker.swift */,
+			);
+			path = Voice;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -3453,6 +3479,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE5967703FFB42498D933DB5 /* ElevenLabsTranscriber.swift in Sources */,
+				CE28286458014E25B9CF67C1 /* VoiceInputHUD.swift in Sources */,
+				944944082B544817AEB741EB /* VoiceInputManager.swift in Sources */,
+				C43D63DDD88D4DFD87E0B514 /* VoiceInputSettings.swift in Sources */,
+				66C7DE5A1A1C4ABCB1F38A2C /* VoiceInputSettingsView.swift in Sources */,
+				89D60FD9D3E345C59E79702E /* VoiceShiftTracker.swift in Sources */,
 				BD23B6E12CB0585B0041C38D /* ios_patches.m in Sources */,
 				D2AD8E7527A2BAFA00DED28D /* PurchasesUserModel.swift in Sources */,
 				BDFA97352D959BC90020BBF2 /* TypingText.swift in Sources */,

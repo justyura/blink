@@ -133,6 +133,11 @@ struct SettingsView: View {
         } details: {
           KBConfigView(config: KBTracker.shared.loadConfig())
         }
+        Row {
+          Label("Voice Input", systemImage: "mic")
+        } details: {
+          VoiceInputSettingsView()
+        }
         RowWithStoryBoardId(content: {
           Label("Smart Keys", systemImage: "keyboard.badge.ellipsis")
         }, storyBoardId: "BKSmartKeysConfigViewController")
