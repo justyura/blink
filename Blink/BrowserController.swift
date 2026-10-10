@@ -197,6 +197,13 @@ import WebKit
     case "close": _close()
     case "reset": ProBrowser.shared.reset(dismissingFrom: presentingViewController)
     case "stop": webView?.stopLoading()
+    case "command":
+      // A Blink-level shortcut (host jumper, session jumper, Canvas, tab N):
+      // hide the browser, then run it on the terminal.
+      guard let raw = payload as? String, let cmd = Command(rawValue: raw) else { return }
+      let presenter = navigationController?.presentingViewController as? SpaceController
+      _close()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { presenter?._onCommand(cmd) }
     case "copyURL":
       if let s = payload as? String { UIPasteboard.general.string = s }
     default: break

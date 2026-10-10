@@ -144,17 +144,6 @@ enum BrowserVimScript {
 
   window.addEventListener('scroll', function () { if (hints) { clearHints(); } }, { passive: true });
 
-  // Pages like Google autofocus their search box, which would swallow j/k and
-  // Option shortcuts. Release that focus unless the user interacted with the page.
-  var interacted = false;
-  window.addEventListener('pointerdown', function () { interacted = true; }, true);
-  window.addEventListener('keydown', function (e) {
-    if (!e.metaKey && !e.altKey && !e.ctrlKey && isEditable(document.activeElement) && e.key.length === 1) { interacted = true; }
-  }, true);
-  function releaseAutofocus() {
-    if (!interacted && isEditable(document.activeElement)) { document.activeElement.blur(); }
-  }
-  [0, 300, 1000, 2500].forEach(function (ms) { setTimeout(releaseAutofocus, ms); });
 })();
 """#
 
@@ -165,22 +154,26 @@ enum BrowserVimScript {
 (function () {
   if (window.__blinkProHotkeys) { return; }
   window.__blinkProHotkeys = true;
-  function post(action) {
-    try { window.webkit.messageHandlers.blinkpro.postMessage({ action: action, payload: null }); } catch (e) {}
+  function post(action, payload) {
+    try { window.webkit.messageHandlers.blinkpro.postMessage({ action: action, payload: payload || null }); } catch (e) {}
   }
+  // Physical key codes, so Option+letter is recognised even though e.key is a
+  // dead/accented character, and it works while a page input has focus.
+  var commands = { KeyF: 'hostJumper', KeyJ: 'sessionSwitcher', KeyB: 'openCanvas',
+    Digit1: 'tab1', Digit2: 'tab2', Digit3: 'tab3', Digit4: 'tab4', Digit5: 'tab5',
+    Digit6: 'tab6', Digit7: 'tab7', Digit8: 'tab8', Digit9: 'tab9' };
   window.addEventListener('keydown', function (e) {
-    var k = (e.key || '').toLowerCase();
     var alt = e.altKey && !e.metaKey && !e.ctrlKey;
     var meta = e.metaKey && !e.altKey && !e.ctrlKey;
-    if ((alt && !e.shiftKey && (k === 'c' || k === 'ç')) || (meta && k === 'w')) {
-      e.preventDefault(); e.stopImmediatePropagation(); post('close');
-    } else if (alt && e.shiftKey && (k === 'c' || k === 'ç')) {
-      e.preventDefault(); e.stopImmediatePropagation(); post('reset');
-    } else if (meta && k === '.') {
-      e.preventDefault(); e.stopImmediatePropagation(); post('stop');
-    } else if (alt && (k === 'o' || k === 'ø')) {
-      e.preventDefault(); e.stopImmediatePropagation(); post('address');
-    }
+    var action = null, payload = null;
+    if (alt && e.code === 'KeyC') { action = e.shiftKey ? 'reset' : 'close'; }
+    else if (meta && e.code === 'KeyW') { action = 'close'; }
+    else if (meta && e.code === 'Period') { action = 'stop'; }
+    else if (alt && e.code === 'KeyO') { action = 'address'; }
+    else if (alt && !e.shiftKey && commands[e.code]) { action = 'command'; payload = commands[e.code]; }
+    if (!action) { return; }
+    e.preventDefault(); e.stopImmediatePropagation();
+    post(action, payload);
   }, true);
 })();
 """#
