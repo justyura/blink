@@ -111,6 +111,7 @@ struct SSHImport: NonStdIOCommand {
             if !dryRun { existing.removeCard() }
           } else {
             print("\(name): already exists, skipped (use --force to replace)")
+            if !dryRun { try? fm.removeItem(atPath: path) }
             skipped += 1
             continue
           }

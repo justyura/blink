@@ -42,13 +42,15 @@ trap 'rm -rf "$STAGE"' EXIT
 #  - IdentityFile ~/.ssh/<name> becomes IdentityFile <name> (Blink resolves it from its keychain)
 #  - Include lines are dropped (their targets usually point at Mac-only tools)
 #  - macOS/OpenSSH-only options are dropped
+#  - trailing whitespace is removed from every line
 python3 -I - "$SSH_DIR/config" "$STAGE/config" "$STAGE/keys.txt" "$SSH_DIR" <<'PY'
 import re, sys, os
 src, dst, keylist, sshdir = sys.argv[1:5]
 drop = {"usekeychain", "addkeystoagent", "identityagent", "controlmaster", "controlpath",
         "controlpersist", "include", "identitiesonly"}
 keys, out = [], []
-for line in open(src, encoding="utf-8"):
+for raw in open(src, encoding="utf-8"):
+    line = raw.rstrip() + "\n"   # OpenSSH ignores trailing tabs/spaces; Blink's parser does not
     stripped = line.strip()
     m = re.match(r"^(\w+)\s*[=\s]\s*(.*)$", stripped)
     if m:

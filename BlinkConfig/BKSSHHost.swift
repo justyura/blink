@@ -95,7 +95,7 @@ public struct BKSSHHost {
         return try list.map { try T(castSSHValue: $0) }
       } else {
         return try (value as! String)
-          .split(separator: " ")
+          .split(whereSeparator: { $0 == " " || $0 == "\t" })
           .map { try T(castSSHValue: String($0)) }
       }
     }
