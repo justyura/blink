@@ -128,6 +128,17 @@ device or import them in Settings › Keys. Blink's own Hosts sync is in Setting
 tools/sync-ssh-to-ipad.sh            # pushes ~/.ssh/config, referenced keys and known_hosts
 ```
 
+For a phone, or any install that did not come from Xcode (TestFlight), devicectl cannot write
+into the app, so prepare the folder instead and AirDrop it:
+
+```bash
+tools/sync-ssh-to-ipad.sh --out ~/Desktop   # creates ~/Desktop/ssh-sync
+```
+
+Save the folder in Files under *On My iPhone › Blink Pro* (it becomes `Documents/ssh-sync`),
+then run `ssh-import` inside Blink Pro and delete the folder from the Mac. With iCloud sync
+on, `~/.ssh/config` and `known_hosts` arrive by themselves; only the private keys need this.
+
 Then run `ssh-import` inside Blink Pro. It installs `~/.ssh/config` (with `IdentityFile`
 rewritten to key names), imports the private keys into the Blink keychain and merges
 `known_hosts`. Keys protected by a passphrase are skipped and can be imported from

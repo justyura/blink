@@ -3,7 +3,12 @@
 # Blink Pro: push this Mac's SSH config, the keys it references and known_hosts
 # to Blink Pro on an iPad/iPhone, then import them there with `ssh-import`.
 #
-# Usage: tools/sync-ssh-to-ipad.sh [--device <name|udid>] [--bundle-id <id>] [--no-keys]
+# Usage: tools/sync-ssh-to-ipad.sh [--device <name|udid>] [--bundle-id <id>] [--no-keys] [--out <dir>]
+#
+# --out <dir> writes the prepared "ssh-sync" folder to <dir> instead of pushing it with
+# devicectl. Use it for a phone or a TestFlight install: AirDrop the folder to the device,
+# save it in Files under "On My iPhone > Blink Pro" (so it becomes Documents/ssh-sync),
+# then run `ssh-import` in Blink Pro.
 #
 # Requires Xcode (xcrun devicectl) and a device paired with this Mac.
 # The files land in the app's Documents/ssh-sync folder; run `ssh-import`
@@ -15,6 +20,7 @@ set -euo pipefail
 DEVICE="${BLINKPRO_DEVICE:-}"
 BUNDLE_ID="${BLINKPRO_BUNDLE_ID:-com.yura.blinkpro}"
 WITH_KEYS=1
+OUT_DIR=""
 SSH_DIR="$HOME/.ssh"
 
 while [[ $# -gt 0 ]]; do
@@ -22,12 +28,13 @@ while [[ $# -gt 0 ]]; do
     --device) DEVICE="$2"; shift 2 ;;
     --bundle-id) BUNDLE_ID="$2"; shift 2 ;;
     --no-keys) WITH_KEYS=0; shift ;;
+    --out) OUT_DIR="$2"; shift 2 ;;
     -h|--help) sed -n 2,13p "$0"; exit 0 ;;
     *) echo "unknown option: $1" >&2; exit 2 ;;
   esac
 done
 
-if [[ -z "$DEVICE" ]]; then
+if [[ -z "$DEVICE" && -z "$OUT_DIR" ]]; then
   # Pick the first paired iPad/iPhone.
   DEVICE=$(xcrun devicectl list devices 2>/dev/null | awk '/iPad|iPhone/ { for (i=1;i<=NF;i++) if ($i ~ /^[0-9A-F]{8}-/) { print $i; exit } }')
   [[ -n "$DEVICE" ]] || { echo "No paired device found. Pass --device <udid>." >&2; exit 1; }
@@ -87,6 +94,21 @@ rm -f "$STAGE/keys.txt"
 if [[ -f "$SSH_DIR/known_hosts" ]]; then
   cp "$SSH_DIR/known_hosts" "$STAGE/known_hosts"
   echo "known_hosts: $(wc -l < "$STAGE/known_hosts" | tr -d ' ') entries"
+fi
+
+if [[ -n "$OUT_DIR" ]]; then
+  mkdir -p "$OUT_DIR"
+  rm -rf "$OUT_DIR/ssh-sync"
+  cp -R "$STAGE" "$OUT_DIR/ssh-sync"
+  cat <<MSG
+
+Prepared $OUT_DIR/ssh-sync (contains private keys: delete it after importing).
+AirDrop the folder to the device, save it in Files under "On My iPhone/iPad > Blink Pro",
+then run in Blink Pro:
+
+    ssh-import
+MSG
+  exit 0
 fi
 
 echo "Copying to $BUNDLE_ID on $DEVICE ..."
